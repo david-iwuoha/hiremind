@@ -1,0 +1,21 @@
+{
+  "badge_name": "HireMind Credential Badge",
+  "description": "A non-transferable credential badge issued via Hedera Token Service (HTS). Each badge is soulbound to the recipient’s Hedera account.",
+  "token_type": "NON_FUNGIBLE_UNIQUE",
+  "supply_type": "FINITE",
+  "max_supply": 1000,
+  "transferability": "NON_TRANSFERABLE",
+  "metadata_schema": {
+    "cid": "bafybeigdyrzt4w5h7qexamplecid",
+    "sha256": "d2d2d0b7f99a9f543examplehashaf9b3cfd118f40e6cd8f",
+    "txId": "0.0.6880493@1758446099.809223042"
+  },
+  "keys": {
+    "admin_key": "issuer-only",
+    "supply_key": "issuer-only",
+    "freeze_key": "none",
+    "kyc_key": "none",
+    "wipe_key": "none"
+  },
+  "use_case": "Credentialing and proof of achievement on Hedera. Each badge is linked to an HCS-anchored record for immutability."
+}

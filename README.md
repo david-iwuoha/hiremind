@@ -1,4 +1,4 @@
-# HireMind 🚀  
+# HireMind 
 
 HireMind is an AI-powered job application assistant.  
 It helps job seekers instantly generate tailored resumes and cover letters with AI, while leveraging **Hedera** for optional blockchain credential verification, ensuring authenticity and trust for employers. 

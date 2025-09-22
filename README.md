@@ -16,7 +16,7 @@ Make hiring smarter, faster, and more authentic by connecting talent to opportun
 - Simple, user-friendly interface  
 
 ## 🔹 Category  
-AI / Robotics  
+AI / Robotics, DLT for operations
 
 
 **## Step 1 — Hedera MVP Setup**

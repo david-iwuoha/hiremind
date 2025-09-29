@@ -1,4 +1,8 @@
 {
+  "name": "hiremind-backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
   "dependencies": {
     "@hashgraph/sdk": "^2.73.1",
     "compromise": "^14.14.4",
@@ -9,5 +13,8 @@
     "node-fetch": "^3.3.2",
     "pdf-lib": "^1.17.1",
     "pdf-parse": "^1.1.1"
+  },
+  "scripts": {
+    "start": "node server.js"
   }
 }

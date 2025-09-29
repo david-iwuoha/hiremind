@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="images/icon.png">
+  <title>HireMind — Shortlist & Notes</title>
+
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/shortlist.css">
+</head>
+<body>
+
+  <!-- Access modal (requires company + PIN 090845 for Dora Hacks) -->
+ <div id="accessModal">
+  <div class="modal-box">
+    <h2>Recruiter access</h2>
+    <p>Please confirm your organisation and enter the 6-digit PIN.</p>
+
+    <label for="companySelect">Company</label>
+    <select id="companySelect">
+      <option value="dora">Dora Hacks</option>
+      <option value="acme">Acme Corp</option>
+          <option value="globex">Globex</option>
+          <option value="stark">Stark Industries</option>
+          <option value="umbrella">Umbrella Corp</option>
+      
+    </select>
+    <img id="companyLogo" src="company-placeholder.png" alt="logo" width="40">
+
+    <label for="companyPin">6-digit PIN</label>
+    <input type="password" id="companyPin" placeholder="Enter 6-digit PIN" maxlength="6">
+
+    <span id="modalError"></span>
+
+    <div class="modal-actions">
+      <button id="modalCancel">Cancel</button>
+      <button id="modalSubmit">Verify</button>
+    </div>
+
+    <small>Only <b>Dora Hacks</b> is accessible for this demo. PIN: <code>090845</code></small>
+  </div>
+</div>
+
+
+  <!-- Header (shared style with recruiter pages) -->
+  <header class="rec-header">
+    <div class="brand">HireMind — Recruiter</div>
+
+    <div class="rec-right">
+      <div id="burger" class="burger" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <a href="dashboard.html" class="btn-back">Back to Dashboard</a>
+    </div>
+  </header>
+
+  <!-- Main content (hidden until modal is validated) -->
+  <main class="rec-main" id="mainContent" aria-hidden="true">
+    <section class="shortlist-panel">
+      <div class="shortlist-left">
+        <div class="panel-head">
+          <h2>Shortlist & Notes</h2>
+          <p class="muted">Keep track of promising candidates and internal notes.</p>
+        </div>
+
+        <div class="controls">
+          <input id="searchInput" placeholder="Search by name or email..." />
+          <select id="filterStatus">
+            <option value="">All statuses</option>
+            <option value="shortlisted">Shortlisted</option>
+            <option value="interview">Interviewing</option>
+            <option value="rejected">Rejected</option>
+            <option value="hired">Hired</option>
+          </select>
+          <button id="exportCsv" class="btn ghost"><i class="bx bx-download"></i> Export CSV</button>
+        </div>
+
+        <div class="add-card">
+          <h4>Add Candidate</h4>
+          <form id="addForm">
+            <input id="c_name" placeholder="Full name" required />
+            <input id="c_email" placeholder="Email" required />
+            <input id="c_role" placeholder="Role / applied for" />
+            <button type="submit" class="btn primary">Add to list</button>
+          </form>
+        </div>
+
+        <div id="listWrap" class="list-wrap"></div>
+      </div>
+
+      <aside class="shortlist-right">
+        <h4>Candidate Details</h4>
+        <div id="detailsEmpty" class="muted">Select a candidate to view notes & actions</div>
+
+        <div id="candidateDetails" class="details-panel" hidden>
+          <h3 id="dt_name">—</h3>
+          <div class="meta"><span id="dt_email">—</span></div>
+          <div class="meta"><strong>Role:</strong> <span id="dt_role">—</span></div>
+
+          <div class="notes-area">
+            <h4>Internal Notes</h4>
+            <div id="notesList"></div>
+            <textarea id="noteInput" placeholder="Add a private note..."></textarea>
+            <button id="saveNote" class="btn small">Save note</button>
+          </div>
+
+          <div class="actions">
+            <label>Status</label>
+            <select id="statusSelect">
+              <option value="shortlisted">Shortlisted</option>
+              <option value="interview">Interviewing</option>
+              <option value="rejected">Rejected</option>
+              <option value="hired">Hired</option>
+            </select>
+            <button id="removeCandidate" class="btn ghost">Remove</button>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="rec-footer">
+    <div>© 2025 HireMind</div>
+    <div class="footer-right">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@14.11.0/icons/hedera.svg" alt="Hedera" />
+      <span class="muted">Hedera-backed</span>
+    </div>
+  </footer>
+
+  <script src="js/shortlist.js"></script>
+</body>
+</html>

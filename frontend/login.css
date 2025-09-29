@@ -1,0 +1,172 @@
+/* Full page layout */
+.auth-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+/* Left Side - Image */
+.auth-image {
+  flex: 1;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.auth-image img {
+
+  background: url("images/4214558.jpg") no-repeat center center/cover;
+  /* ensures it fills the entire left side */
+  height: 100vh; /* full viewport height */
+   height: 100%;  /* fill parent height */
+  width: 100%;   /* fill parent width */
+}
+
+/* Right Side - Forms */
+.auth-forms {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  padding: 2rem;
+}
+
+.form {
+  width: 100%;
+  max-width: 350px;
+  display: none;
+  flex-direction: column;
+}
+.form.active {
+  display: flex;
+}
+
+h1 {
+  color: #00a0fc;
+  font-family: inherit;
+}
+
+.form h2 {
+  margin-bottom: 1rem;
+  color: #00a0fc;
+}
+
+.form-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Inputs */
+/* Base input style */
+form input {
+  width: 100%;
+  padding: 12px;
+  margin: 12px 0;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  background: transparent;
+  font-size: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  outline: none;
+}
+
+/* Focus state with smooth transition */
+form input:focus {
+  border-bottom: 2px solid #00a0fc;
+  box-shadow: 0 2px 0 #00a0fc; /* slim glowing line */
+}
+
+/* Buttons */
+.btn {
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn.primary {
+  background: var(--base-color, #0077ff); /* Base color */
+  color: #fff;
+  transition: 0.3s;
+}
+.btn.primary:hover {
+  background: #005fcc; /* Darker shade */
+}
+
+/* Google Button */
+.btn.google-auth {
+  background: #fff;
+  border: 1px solid #ccc;
+}
+.btn.google-auth img {
+  width: 20px;
+  margin-right: 10px;
+}
+
+/* Switch links */
+.switch {
+  text-align: center;
+  font-size: 0.9rem;
+}
+.switch a {
+  color: var(--base-color, #00a0fc);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+
+/* ---------------- MEDIA QUERIES ---------------- */
+
+/* Tablet & smaller */
+@media (max-width: 768px) {
+  .auth-image {
+    display: none; /* Hide image */
+  }
+   
+ 
+  .auth-forms {
+    flex: none;
+    width: 90%;
+    max-width: 400px;
+    margin: auto;
+    padding: 30px;
+    background: #e2e2e2; /* card background */
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Close (X) Button */
+.form {
+  position: relative; /* make the form the positioning parent */
+}
+
+.form-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 2rem;       /* bigger size */
+  font-weight: 300;      /* thinner look */
+  color: #444;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.form-close:hover {
+  color: #e53935;
+  transform: scale(1.1);
+}
+
+
+
+
+
+

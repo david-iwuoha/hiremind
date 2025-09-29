@@ -1,0 +1,186 @@
+:root{
+  --brand: #00a0fc;
+  --accent: #0b2540;
+  --muted: #66707a;
+  --bg: #f6fbff;
+  --card: #ffffff;
+  --danger: #ff4d4d;
+}
+
+/* Basic reset */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--accent); -webkit-font-smoothing:antialiased;}
+a{color:var(--brand)}
+
+/* header */
+.rec-header{background:#fff;padding:14px 20px;box-shadow:0 6px 20px rgba(8,16,32,0.04);display:flex;justify-content:center;align-items:center;font-weight:700;color:var(--brand)}
+
+/* main layout */
+.rec-main{max-width:1100px;margin:20px auto;padding:18px;display:grid;grid-template-columns:1fr;gap:20px}
+
+/* verify card */
+.verify-card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 12px 30px rgba(8,16,32,0.05)}
+.verify-form{display:flex;gap:10px;align-items:center;margin-top:10px}
+.verify-form input{flex:1;padding:10px;border-radius:8px;border:1px solid #e6eefb;font-size:0.95rem}
+.verify-form .btn{padding:10px 14px;border-radius:8px;border:none;cursor:pointer}
+.btn.primary{background: linear-gradient(90deg, #ff4b2b, #ff416c); color: white; border: none; padding: 10px 18px;font-weight: 600;  border-radius: 8px;cursor: pointer;transition: all 0.3s ease;}
+ .btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 10px;border-radius:8px}
+
+/* result box */
+.result{margin-top:12px;padding:12px;border-radius:8px;font-weight:600}
+.result-box{background:#fff8ea;border:1px solid #ffecb8}
+.result-box.valid{background:#eaffef;border:1px solid #bff6c8}
+.result-box.invalid{background:#ffecec;border:1px solid #ffbdbd}
+
+/* table */
+.table-panel{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 12px 30px rgba(8,16,32,0.05)}
+.table-header{display:flex;justify-content:space-between;align-items:center}
+.verified-table{width:100%;border-collapse:collapse;margin-top:12px}
+.verified-table th,.verified-table td{padding:10px 12px;border-bottom:1px solid #f0f4fb;text-align:left;font-size:0.95rem}
+.verified-table th{color:var(--muted);font-weight:700}
+.verified-table tbody tr:hover{background:linear-gradient(90deg,#f6fbff,#ffffff)}
+.btn.small{padding:6px 8px;border-radius:6px}
+
+/* table note */
+.table-note{margin-top:8px;color:var(--muted);font-size:0.9rem}
+
+/* footer */
+.rec-footer{max-width:1100px;margin:20px auto;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;color:var(--muted)}
+.rec-footer img{width:18px;height:18px;margin-right:8px}
+
+/* modal overlay */
+.modal-overlay{position:fixed;inset:0;background:rgba(10,16,24,0.28);display:flex;align-items:center;justify-content:center;z-index:2000;backdrop-filter: blur(3px)}
+.modal-box{background:var(--card);padding:20px;border-radius:12px;max-width:420px;width:92%;box-shadow:0 24px 60px rgba(8,16,32,0.2);text-align:left}
+.modal-box h2{margin-bottom:6px}
+.modal-box p{color:var(--muted);font-size:0.95rem;margin-bottom:12px}
+.modal-box label{display:block;margin-top:8px;color:var(--muted);font-size:0.9rem;margin-bottom:6px}
+.modal-box input, .modal-box select{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eefb}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+.modal-note{display:block;margin-top:10px;color:var(--muted);font-size:0.82rem}
+.modal-error{color:var(--danger);margin-top:8px;min-height:18px}
+
+/* company row */
+.company-row{display:flex;align-items:center;gap:10px}
+.company-row select{flex:1}
+.company-row img{width:48px;height:48px;object-fit:contain;border-radius:6px;background:#f4f7fb;padding:6px;border:1px solid rgba(0,0,0,0.03)}
+
+/* small screens */
+@media (max-width:720px){
+  .rec-main{padding:12px}
+  .modal-box{max-width:95%}
+  .verified-table th,.verified-table td{font-size:0.85rem;padding:8px}
+}
+
+/* Responsive for tablets and smaller screens */
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fff;
+  }
+
+  td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    flex: 1;
+    color: #444;
+  }
+}
+
+.btn-cancel, 
+.btn-back {
+  background: #f44336; /* red */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  text-decoration: none; /* for the link */
+  font-size: 0.9rem;
+}
+
+.btn-cancel:hover,
+.btn-back:hover {
+  background: #d32f2f; /* darker red */
+}
+
+
+.rec-header {
+  display: flex;
+  justify-content: space-between; /* pushes brand left, button right */
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #00a0fc; /* your base color */
+  color: white;
+}
+
+.rec-header .brand {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+
+/* burger hidden by default on desktop */
+.burger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 5px;
+}
+
+.burger span {
+  width: 25px;
+  height: 3px;
+  background: white;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+
+@media (max-width: 768px) {
+  .btn-back {
+    display: none;
+  }
+
+  .burger {
+    display: flex;
+  }
+
+  /* slide-out menu for the back button */
+  .rec-right.active .btn-back {
+    display: block;
+    position: absolute;
+    top: 60px; /* just below the header */
+    right: 20px;
+    background: #f44336;
+    padding: 0.7rem 1.2rem;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    animation: slideDown 0.3s ease forwards;
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+

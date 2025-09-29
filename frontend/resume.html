@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HireMind — Resume Upload</title>
+  <link rel="icon" href="images/icon.png">
+  <link rel="stylesheet" href="css/resume.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="rec-header">
+    <div class="brand">HireMind — Candidate</div>
+    <div class="rec-right">
+      <a href="dashboard.html" class="btn-back">Back to Dashboard</a>
+      <div class="burger">&#9776;</div>
+    </div>
+  </header>
+
+  <!-- Main Section -->
+  <main class="resume-container">
+    <h2 class="section-title">Resume Upload</h2>
+    <p class="section-sub">Upload or replace your current resume for applications.</p>
+
+    <div class="resume-grid">
+      <!-- Upload Area -->
+      <div class="upload-box" id="uploadBox">
+        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#00a0fc" viewBox="0 0 24 24">
+          <path d="M12 16V4m0 12l-4-4m4 4l4-4M4 20h16"/>
+        </svg>
+        <p>Drag & Drop your resume here <br> or <span class="highlight">browse files</span></p>
+        <input type="file" id="resumeInput" accept="application/pdf" hidden>
+      </div>
+
+      <!-- Preview Area -->
+      <div class="preview-box" id="previewBox" hidden>
+        <h3>Uploaded Resume</h3>
+        <p><strong>File:</strong> Resume_Demo.pdf</p>
+        <p><strong>Size:</strong> 125 KB</p>
+        <div class="preview-actions">
+          <a href="assets/Resume_Demo.pdf" download class="btn primary">Download</a>
+          <button class="btn secondary" id="replaceBtn">Replace</button>
+        </div>
+        <div class="pdf-preview">
+          <embed src="assets/Resume_Demo.pdf" type="application/pdf" width="100%" height="200px">
+        </div>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div id="status" class="status"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <small>Built on Hedera
+      <span class="hedera-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="24" fill="black"/>
+          <path d="M17.5 15.5V32.5M30.5 15.5V32.5M17.5 24H30.5" stroke="white" stroke-width="2.5"/>
+        </svg>
+      </span>
+    </small>
+  </footer>
+
+  <script src="js/resume.js"></script>
+</body>
+</html>

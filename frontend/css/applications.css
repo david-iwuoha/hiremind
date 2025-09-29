@@ -1,0 +1,191 @@
+/* General layout */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f9fafc;
+  color: #333;
+}
+
+/* Header */
+.rec-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--base-color, #00a0fc);
+  padding: 1rem 2rem;
+  color: #fff;
+}
+.rec-header .brand {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.rec-header .btn-back {
+   background: #fff;
+  color: #00a0fc;
+  padding: 8px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+.rec-header .btn-back:hover {
+  background: #eaeaea;
+}
+.burger {
+  display: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+/* Main */
+.apps-container {
+  padding: 2rem;
+  max-width: 1100px;
+  margin: auto;
+}
+.section-title {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  color: var(--base-color, #0077ff);
+}
+.section-sub {
+  margin-bottom: 1.5rem;
+  color: #555;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.filters input,
+.filters select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin: 5px 0;
+}
+
+/* Table */
+.table-wrapper {
+  overflow-x: auto;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+.apps-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.apps-table th,
+.apps-table td {
+  padding: 12px 16px;
+  text-align: left;
+}
+.apps-table th {
+  background: #f1f4f8;
+  font-weight: bold;
+}
+.apps-table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+/* Badges */
+.badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: #fff;
+}
+.badge.pending { background: #0077ff; }
+.badge.review { background: #ff9800; }
+.badge.interview { background: #00bcd4; }
+.badge.accepted { background: #4caf50; }
+.badge.rejected { background: #f44336; }
+
+/* Buttons */
+.view-btn {
+  padding: 6px 12px;
+  background: var(--base-color, #0077ff);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.view-btn:hover {
+  background: #005fcc;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background: #f1f1f1;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+footer img.hedera-logo {
+  height: 16px;
+  margin-left: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .rec-header .btn-back {
+    display: none;
+  }
+  .burger {
+    display: block;
+  }
+  .filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .filters input,
+  .filters select {
+    width: 100%;
+  }
+}
+
+/* Search bar focus styling */
+.filters input {
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.filters input:focus {
+  border-color: #00a0fc;
+  box-shadow: 0 0 5px rgba(0, 160, 252, 0.5);
+}
+
+/* Footer layout (improve inline SVG alignment) */
+footer small {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;           /* space between text and logo */
+  font-size: 0.95rem;
+  color: #333;
+}
+
+footer .hedera-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Make the SVG match the text height and remain crisp */
+footer .hedera-logo svg {
+  height: 1em;          /* matches the font-size of the surrounding text */
+  width: auto;
+  display: block;       /* prevents tiny baseline issues across browsers */
+}
+
+/* Small tweak for very small screens */
+@media (max-width: 420px) {
+  footer small { font-size: 0.85rem; }
+  footer .hedera-logo svg { height: 0.95em; }
+}

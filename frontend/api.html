@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link rel="icon" href="images/icon.png">
+  <title>HireMind — API Docs</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/api.css" />
+</head>
+<body>
+
+  <!-- Access modal (same) -->
+  <div id="accessModal">
+  <div class="modal-box">
+    <h2>Recruiter access</h2>
+    <p>Please confirm your organisation and enter the 6-digit PIN.</p>
+
+    <label for="companySelect">Company</label>
+    <select id="companySelect">
+      <option value="dora">Dora Hacks</option>
+      <option value="acme">Acme Corp</option>
+          <option value="globex">Globex</option>
+          <option value="stark">Stark Industries</option>
+          <option value="umbrella">Umbrella Corp</option>
+      
+    </select>
+    <img id="companyLogo" src="company-placeholder.png" alt="logo" width="40">
+
+    <label for="companyPin">6-digit PIN</label>
+    <input type="password" id="companyPin" placeholder="Enter 6-digit PIN" maxlength="6">
+
+    <span id="modalError"></span>
+
+    <div class="modal-actions">
+      <button id="modalCancel">Cancel</button>
+      <button id="modalSubmit">Verify</button>
+    </div>
+
+    <small>Only <b>Dora Hacks</b> is accessible for this demo. PIN: <code>090845</code></small>
+  </div>
+</div>
+
+  <header class="rec-header">
+    <div class="brand">HireMind — Recruiter</div>
+    <div class="rec-right">
+      <div class="burger" id="burgerApi"><span></span><span></span><span></span></div>
+      <a href="dashboard.html" class="btn-back">Back to Dashboard</a>
+    </div>
+  </header>
+
+  <main class="api-main" id="mainContent" aria-hidden="true">
+    <section class="doc-card">
+      <h2>HireMind API Documentation</h2>
+      <p class="muted">Simple endpoints for verification, resume parsing and listing verified records.</p>
+
+      <div class="endpoint">
+        <h3>POST /verify</h3>
+        <p>Verify a transaction anchored credential. JSON body: <code>{ "txId": "0.0.XXX@..." }</code></p>
+        <pre><code class="code-block">curl -X POST "https://yourdomain.com/verify" \
+  -H "Content-Type: application/json" \
+  -d '{"txId":"0.0.6871751@1758623630.688436122"}'
+        </code></pre>
+        <button class="btn copy" data-target="verify-curl">Copy</button>
+      </div>
+
+      <div class="endpoint">
+        <h3>POST /parse-resume</h3>
+        <p>Upload a resume (multipart/form-data). Returns extracted skills and suggested role.</p>
+        <pre><code class="code-block">curl -X POST "https://yourdomain.com/parse-resume" \
+  -F "resume=@./resume.pdf"
+        </code></pre>
+        <button class="btn copy" data-target="parse-curl">Copy</button>
+      </div>
+
+      <div class="endpoint">
+        <h3>GET /verified</h3>
+        <p>List verified credential records for admin. Returns array of { txId, fileName, sha256, issuer, verifiedAt }.</p>
+        <pre><code class="code-block">curl "https://yourdomain.com/verified"</code></pre>
+        <button class="btn copy" data-target="verified-curl">Copy</button>
+      </div>
+
+      <div class="notes">
+        <h4>Notes</h4>
+        <ul>
+          <li>All credential hashes are anchored using Hedera Consensus Service (HCS).</li>
+          <li>Do not store PII on-chain — only store SHA256 / CID proofs.</li>
+          <li>Use Hedera Token Service (HTS) to mint non-transferable credential badges (future).</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rec-footer">
+    <div>© 2025 HireMind</div>
+    <div class="footer-right"><img src="https://cdn.jsdelivr.net/npm/simple-icons@14.11.0/icons/hedera.svg" alt="Hedera" /><span>Hedera-backed</span></div>
+  </footer>
+
+  <script src="js/api.js"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+/* General */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f8f9fb;
+  color: #333;
+}
+
+.rec-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: #00a0fc;
+  color: #fff;
+}
+
+.rec-header .brand {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.rec-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-back {
+  background: #fff;
+  color: #00a0fc;
+  padding: 8px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.btn-back:hover {
+  background: #e6f4ff;
+}
+
+.burger {
+  cursor: pointer;
+  font-size: 1.5rem;
+  display: none;
+}
+
+/* Main */
+.ai-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  margin-bottom: 5px;
+  color: #222;
+}
+
+.section-sub {
+  margin-bottom: 25px;
+  color: #555;
+}
+
+.demo-note {
+  color: #00a0fc;
+  font-weight: bold;
+}
+
+.ai-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+/* Upload Box */
+.upload-box {
+  background: #fff;
+  border: 2px dashed #00a0fc;
+  border-radius: 10px;
+  padding: 40px 20px;
+  text-align: center;
+  transition: background 0.3s, border 0.3s;
+}
+
+.upload-box:hover {
+  background: #f0faff;
+  border-color: #007acc;
+}
+
+.upload-content p {
+  margin-top: 15px;
+  font-size: 0.95rem;
+}
+
+.upload-content .browse {
+  color: #00a0fc;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.status {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #007acc;
+}
+
+/* Preview Box */
+.preview-box {
+  background: #fff;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.preview-box h3 {
+  margin-top: 0;
+  color: #222;
+}
+
+.preview-box .demo-info {
+  font-size: 0.85rem;
+  color: #777;
+  margin-bottom: 15px;
+}
+
+#parsedData {
+  list-style: none;
+  padding: 0;
+}
+
+#parsedData li {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #f6f9ff;
+  border-left: 4px solid #00a0fc;
+  border-radius: 5px;
+  font-size: 0.95rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 15px;
+  background: #f1f1f1;
+  margin-top: 40px;
+}
+
+.hedera-logo {
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ai-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .burger {
+    display: block;
+  }
+
+  .rec-right .btn-back {
+    display: none;
+  }
+}

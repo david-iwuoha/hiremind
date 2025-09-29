@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HireMind — AI Parser</title>
+  <link rel="icon" href="images/icon.png">
+  <link rel="stylesheet" href="css/ai.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="rec-header">
+    <div class="brand">HireMind — AI Parser</div>
+    <div class="rec-right">
+      <a href="dashboard.html" class="btn-back">Back to Dashboard</a>
+      <div class="burger">&#9776;</div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="ai-container">
+    <h2 class="section-title">AI Resume Parser</h2>
+    <p class="section-sub">
+      Extract structured data from resumes instantly 
+      <span class="demo-note">(Demo Display for MVP)</span>
+    </p>
+
+    <div class="ai-grid">
+      <!-- Upload Box -->
+      <div class="upload-box" id="uploadBox">
+        <div class="upload-content">
+          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#00a0fc" viewBox="0 0 24 24"><path d="M12 16v-9.586l3.293 3.293 1.414-1.414L12 2.586l-4.707 4.707 1.414 1.414L11 6.414V16h1z"/><path d="M5 18h14v2H5z"/></svg>
+          <p>Drag & drop resume here or <span class="browse">browse</span></p>
+          <input type="file" id="fileInput" accept="application/pdf" hidden>
+        </div>
+        <div id="uploadStatus" class="status"></div>
+      </div>
+
+      <!-- Parsed Preview -->
+      <div class="preview-box" id="previewBox">
+        <h3>Parsed Resume Preview</h3>
+        <p class="demo-info">(This is a demo output — actual AI integration can be extended)</p>
+        <ul id="parsedData">
+          <!-- Filled by JS -->
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <small>Built on Hedera
+      <span class="hedera-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="24" fill="black"/>
+          <path d="M17.5 15.5V32.5M30.5 15.5V32.5M17.5 24H30.5" stroke="white" stroke-width="2.5"/>
+        </svg>
+      </span> 
+    </small>
+  </footer>
+
+  <script src="js/ai.js"></script>
+</body>
+</html>

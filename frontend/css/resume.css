@@ -1,0 +1,165 @@
+/* Global */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f9fafc;
+  color: #333;
+}
+
+/* Header */
+.rec-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #00a0fc;
+  color: #fff;
+}
+.brand {
+  font-weight: bold;
+}
+.btn-back {
+   background: #fff;
+  color: #00a0fc;
+  padding: 8px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+.btn-back:hover {
+  background: #e6f4ff;
+}
+.burger {
+  font-size: 1.5rem;
+  margin-left: 1rem;
+  cursor: pointer;
+  display: none;
+}
+
+/* Section */
+.resume-container {
+  padding: 2rem;
+  max-width: 1100px;
+  margin: auto;
+}
+.section-title {
+  color: #00a0fc;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+.section-sub {
+  margin-bottom: 2rem;
+  color: #555;
+}
+
+/* Layout */
+.resume-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* Upload Box */
+.upload-box {
+  border: 2px dashed #00a0fc;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  background: #f0f9ff;
+  cursor: pointer;
+  transition: border-color 0.3s, background 0.3s;
+}
+.upload-box:hover {
+  border-color: #0077cc;
+  background: #e6f4ff;
+}
+.upload-box svg {
+  margin-bottom: 1rem;
+}
+.upload-box .highlight {
+  color: #0077cc;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Preview Box */
+.preview-box {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 1.5rem;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+.preview-box h3 {
+  margin-top: 0;
+  color: #00a0fc;
+}
+.preview-actions {
+  margin: 1rem 0;
+  display: flex;
+  gap: 1rem;
+}
+.btn {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+}
+.btn.primary {
+  background: #00a0fc;
+  color: #fff;
+}
+.btn.primary:hover {
+  background: #0077cc;
+}
+.btn.secondary {
+  background: #eee;
+  color: #333;
+}
+.btn.secondary:hover {
+  background: #ddd;
+}
+
+/* Status */
+.status {
+  margin-top: 1.5rem;
+  color: #0077cc;
+  font-weight: bold;
+}
+
+/* PDF Preview */
+.pdf-preview {
+  margin-top: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+  background: #f0f0f0;
+}
+.hedera-logo {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .resume-grid {
+    grid-template-columns: 1fr;
+  }
+  .burger {
+    display: block;
+  }
+  .btn-back {
+    display: none;
+  }
+}

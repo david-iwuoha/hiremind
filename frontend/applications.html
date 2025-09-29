@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HireMind — Applications</title>
+  <link rel="icon" href="images/icon.png">
+  <link rel="stylesheet" href="css/applications.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="rec-header">
+    <div class="brand">HireMind — Candidate</div>
+    <div class="rec-right">
+      <a href="dashboard.html" class="btn-back">Back to Dashboard</a>
+      <div class="burger">&#9776;</div>
+    </div>
+  </header>
+
+  <!-- Main Section -->
+  <main class="apps-container">
+    <h2 class="section-title">Applications</h2>
+    <p class="section-sub">Track jobs you've applied to and their statuses.</p>
+
+    <!-- Filters -->
+    <div class="filters">
+      <input type="text" id="search" placeholder="Search by job title or company...">
+      <select id="statusFilter">
+        <option value="all">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="review">Under Review</option>
+        <option value="interview">Interview Scheduled</option>
+        <option value="accepted">Accepted</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
+
+    <!-- Applications Table -->
+    <div class="table-wrapper">
+      <table class="apps-table">
+        <thead>
+          <tr>
+            <th>Job Title</th>
+            <th>Company</th>
+            <th>Date Applied</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="appsBody">
+          <!-- Sample rows -->
+          <tr>
+            <td>Frontend Developer</td>
+            <td>Google</td>
+            <td>2025-09-15</td>
+            <td><span class="badge pending">Pending</span></td>
+            <td><button class="view-btn">View</button></td>
+          </tr>
+          <tr>
+            <td>UI/UX Designer</td>
+            <td>Flutterwave</td>
+            <td>2025-09-10</td>
+            <td><span class="badge review">Under Review</span></td>
+            <td><button class="view-btn">View</button></td>
+          </tr>
+          <tr>
+            <td>Data Analyst</td>
+            <td>Andela</td>
+            <td>2025-09-01</td>
+            <td><span class="badge accepted">Accepted</span></td>
+            <td><button class="view-btn">View</button></td>
+          </tr>
+          <tr>
+            <td>Backend Engineer</td>
+            <td>Paystack</td>
+            <td>2025-08-28</td>
+            <td><span class="badge rejected">Rejected</span></td>
+            <td><button class="view-btn">View</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Footer -->
+ <footer>
+  <small>Built on Hedera
+    <span class="hedera-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="24" fill="black"/>
+        <path d="M17.5 15.5V32.5M30.5 15.5V32.5M17.5 24H30.5" stroke="white" stroke-width="2.5"/>
+      </svg>
+    </span> 
+   
+  </small>
+</footer>
+
+  <script src="js/applications.js"></script>
+</body>
+</html>

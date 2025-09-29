@@ -1,0 +1,207 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f9fafc;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Header */
+.rec-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #00a0fc;
+  color: #fff;
+  padding: 1rem 2rem;
+}
+
+.brand {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.rec-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-back {
+   background: #fff;
+  color: #00a0fc;
+  padding: 8px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+.btn-back:hover {
+  background: #e3f0ff;
+}
+
+.burger {
+  display: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Section */
+.jobs-container {
+  padding: 2rem;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2rem;
+  color: #0077ff;
+  margin-bottom: 0.5rem;
+}
+
+.section-sub {
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Carousel */
+.carousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.carousel-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.job-card {
+  background: #fff;
+  border: 2px dashed #0077ff;
+  min-width: 250px;
+  max-width: 280px;
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: left;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+.job-card:hover {
+  transform: translateY(-5px);
+}
+
+.job-card h3 {
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+
+.company {
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.desc {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.apply-btn {
+  display: inline-block;
+  background: #ff9800;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: 0.3s;
+}
+.apply-btn:hover {
+  background: #e68900;
+}
+
+/* Carousel Buttons */
+.carousel-btn {
+  background: #0077ff;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  padding: 0.7rem;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background 0.3s;
+}
+.carousel-btn:hover {
+  background: #005fcc;
+}
+.carousel-btn.left {
+  position: absolute;
+  left: 0;
+}
+.carousel-btn.right {
+  position: absolute;
+  right: 0;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 15px;
+  background: #f1f1f1;
+  margin-top: 40px;
+}
+
+.hedera-logo {
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ai-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .burger {
+    display: block;
+  }
+
+  .rec-right .btn-back {
+    display: none;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .btn-back {
+    display: none;
+  }
+
+  .burger {
+    display: block;
+  }
+
+  .carousel-track {
+    padding: 0.5rem;
+  }
+}
+
+
+.job-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 0.8rem;
+}

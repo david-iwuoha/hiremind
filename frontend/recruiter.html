@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="images/icon.png">
+  <title>HireMind — Recruiter Verification</title>
+
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/recruiter.css" />
+</head>
+<body>
+  <!-- Access modal shown on page load -->
+  <div id="accessModal" class="modal-overlay">
+    <div class="modal-box">
+      <h2>Recruiter access</h2>
+      <p>Please confirm your organisation and enter the 6-digit PIN.</p>
+
+      <label for="companySelect">Company</label>
+      <div class="company-row">
+        <select id="companySelect">
+          <option value="dora">Dora Hacks</option>
+          <option value="acme">Acme Corp</option>
+          <option value="globex">Globex</option>
+          <option value="stark">Stark Industries</option>
+          <option value="umbrella">Umbrella Corp</option>
+        </select>
+        <img id="companyLogo" src="images/company-placeholder.png" alt="company logo" />
+      </div>
+
+      <label for="companyPin">6-digit PIN</label>
+      <input id="companyPin" type="password" maxlength="6" placeholder="Enter 6-digit PIN" />
+
+      <div id="modalError" class="modal-error" aria-live="polite"></div>
+
+      <div class="modal-actions">
+        <button id="modalCancel" class="btn ghost" disabled>Cancel</button>
+        <button id="modalSubmit" class="btn primary">Verify</button>
+
+      </div>
+
+      <small class="modal-note">Only <strong>Dora Hacks</strong> is accessible for this demo. PIN: <code>090845</code></small>
+    </div>
+  </div>
+
+  <!-- Page content -->
+  <header class="rec-header">
+    <div class="brand">HireMind — Recruiter</div>
+     <div class="rec-right">
+      <div class="burger" id="burger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+    <a href="dashboard.html" class="btn-back">Back to Dashboard</a>
+  </div>
+  </header>
+
+  <main class="rec-main" id="mainContent" aria-hidden="true">
+      
+    <section class="verify-card">
+      <h2>Verify Credential</h2>
+
+      <form id="verifyForm" class="verify-form">
+        <input type="text" id="txId" name="txId" placeholder="Enter Transaction ID (e.g. 0.0.12345@...)" required />
+        <button type="submit" class="btn primary">Verify</button>
+      </form>
+
+      <div id="result" class="result"></div>
+    </section>
+
+    <section class="table-panel">
+      <div class="table-header">
+        <h3>Verified Documents</h3>
+        <div>
+          <button id="refreshTable" class="btn ghost"><i class="bx bx-refresh"></i> Refresh</button>
+        </div>
+      </div>
+
+      <table id="verifiedTable" class="verified-table" aria-label="Verified documents">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Tx ID</th>
+            <th>File</th>
+            <th>SHA256</th>
+            <th>Issuer</th>
+            <th>Verified At</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="verifiedTbody">
+          <!-- rows inserted here -->
+        </tbody>
+      </table>
+
+      <div id="tableNote" class="table-note">If your backend exposes <code>/verified</code> (GET) this table will populate automatically.</div>
+    </section>
+    
+  </main>
+
+  <footer class="rec-footer">
+    <div>© 2025 HireMind</div>
+    <div class="footer-right">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@14.11.0/icons/hedera.svg" alt="Hedera" />
+      <span>Hedera-backed verification</span>
+    </div>
+  </footer>
+
+  <script src="js/recruiter.js"></script>
+</body>
+</html>

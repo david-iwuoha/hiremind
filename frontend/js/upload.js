@@ -7,6 +7,9 @@ const txStatusEl = document.getElementById("txStatus");
 const proofHashEl = document.getElementById("proofHash");
 const downloadLink = document.getElementById("downloadLink");
 const downloadWrap = document.getElementById("downloadWrap");
+const fontPath = path.join(process.cwd(), "fonts", "DejaVuSans.ttf");
+doc.font(fontPath);
+
 
 /* Burger menu */
 const burger = document.getElementById("burger");

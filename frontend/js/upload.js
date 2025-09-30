@@ -7,7 +7,7 @@ const txStatusEl = document.getElementById("txStatus");
 const proofHashEl = document.getElementById("proofHash");
 const downloadLink = document.getElementById("downloadLink");
 const downloadWrap = document.getElementById("downloadWrap");
-const fontBytes = await fetch("/fonts11/DejaVuSans.ttf").then(res => res.arrayBuffer());
+//const fontBytes = await fetch("/fonts11/DejaVuSans.ttf").then(res => res.arrayBuffer());
 
 
 

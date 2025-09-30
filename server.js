@@ -1,98 +1,118 @@
-const express = require("express");
-const multer = require("multer");
-const crypto = require("crypto");
-const fs = require("fs");
-const dotenv = require("dotenv");
-const { PDFDocument, rgb } = require("pdf-lib");
-const path = require("path");
+// server.js (ESM-ready, for Render / Node "type": "module")
 
-const app = express(); //  you must create the app before using it
-app.use(express.json());
-const cors = require("cors");
-app.use(cors());
-
-
-const MIRROR_NODE = "https://testnet.mirrornode.hedera.com";
-
-// Serve static files from "frontend" folder
-app.use(express.static(path.join(__dirname, "frontend")));
-
-
-
-
-const {
-  Client,
-  PrivateKey,
-  TopicMessageSubmitTransaction,
-} = require("@hashgraph/sdk");
+import express from "express";
+import multer from "multer";
+import crypto from "crypto";
+import fs from "fs";
+import dotenv from "dotenv";
+import { PDFDocument, rgb } from "pdf-lib";
+import path from "path";
+import cors from "cors";
+import { fileURLToPath } from "url";
+import pdfParse from "pdf-parse";
+import { Client, PrivateKey, TopicMessageSubmitTransaction } from "@hashgraph/sdk";
 
 dotenv.config();
 
-// Hedera credentials
-const accountId = process.env.ACCOUNT_ID;
-const privateKey = process.env.PRIVATE_KEY;
+// ESM __dirname fix
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-if (!accountId || !privateKey) {
-  throw new Error("Missing ACCOUNT_ID or PRIVATE_KEY in .env");
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+// Ensure upload directories exist
+const uploadsDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+
+const stampsDir = __dirname; // stamping currently writes next to project root; change if you want a folder
+
+// Mirror node (can be overridden via env)
+const MIRROR_NODE = process.env.MIRROR_NODE || "https://testnet.mirrornode.hedera.com";
+
+// Serve frontend static (adjust if your frontend lives in another folder)
+app.use(express.static(path.join(__dirname, "frontend")));
+app.use(express.static(path.join(__dirname, "public"))); // optional fallback
+
+// Hedera SDK setup
+const accountId = process.env.ACCOUNT_ID;
+const privateKeyEnv = process.env.PRIVATE_KEY;
+if (!accountId || !privateKeyEnv) {
+  throw new Error("Missing ACCOUNT_ID or PRIVATE_KEY in environment variables");
+}
+
+// Try a few ways to parse the private key so we accept common formats
+let operatorPrivateKey;
+try {
+  // Preferred generic attempt (handles typical Hedera SDK strings)
+  operatorPrivateKey = PrivateKey.fromString(privateKeyEnv);
+} catch (err1) {
+  try {
+    // Try hex ECDSA without 0x
+    const hex = privateKeyEnv.replace(/^0x/, "");
+    operatorPrivateKey = PrivateKey.fromStringECDSA(hex);
+  } catch (err2) {
+    try {
+      operatorPrivateKey = PrivateKey.fromStringED25519(privateKeyEnv);
+    } catch (err3) {
+      console.error("Private key parsing errors:", err1?.message, err2?.message, err3?.message);
+      throw new Error("Unable to parse PRIVATE_KEY. Provide a valid Hedera private key string.");
+    }
+  }
 }
 
 const client = Client.forTestnet();
-client.setOperator(accountId, PrivateKey.fromStringECDSA(privateKey));
- 
+client.setOperator(accountId, operatorPrivateKey);
 
-// allow download of stamped PDF
+// Topic id (prefer env override)
+const HEDERA_TOPIC_ID = process.env.TOPIC_ID || "0.0.6880493";
+
+// Multer upload
+const upload = multer({ dest: uploadsDir });
+
+// Download endpoint for stamped PDFs
 app.get("/download/:name", (req, res) => {
   const filePath = path.join(__dirname, req.params.name);
+  if (!fs.existsSync(filePath)) return res.status(404).send("File not found");
   res.download(filePath, (err) => {
     if (err) {
       console.error("Download error:", err);
-      res.status(404).send("File not found");
+      res.status(500).send("Download error");
     }
   });
 });
 
-const upload = multer({ dest: "uploads/" });
-
-// Example: use your real topicId created in day 2
-const topicId = "0.0.6880493";
-
-// Upload + seal route
+// -------------------- /upload --------------------
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
-    // 1. Read file + hash it
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+
     const fileBuffer = fs.readFileSync(req.file.path);
     const fileHash = crypto.createHash("sha256").update(fileBuffer).digest("hex");
 
-    // 2. Build proof object
     const proof = {
       type: "hiremind-credential-proof",
       fileName: req.file.originalname,
       sha256: fileHash,
       uploadedAt: new Date().toISOString(),
-      issuer: process.env.ACCOUNT_ID,
+      issuer: accountId,
     };
 
-    // 3. Send to Hedera Consensus Service
-    const { Client, TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
-    const client = Client.forTestnet();
-    client.setOperator(process.env.ACCOUNT_ID, process.env.PRIVATE_KEY);
-
-    // NOTE: replace with your existing topicId or create one earlier
-    const topicId = process.env.TOPIC_ID;
-
+    // Submit to Hedera Consensus Service
     const tx = await new TopicMessageSubmitTransaction()
-      .setTopicId(topicId)
+      .setTopicId(HEDERA_TOPIC_ID)
       .setMessage(JSON.stringify(proof))
       .execute(client);
 
     const receipt = await tx.getReceipt(client);
 
-    // 4. Stamp PDF with ✅ + TxID
+    // Stamp the PDF
     const pdfDoc = await PDFDocument.load(fileBuffer);
     const pages = pdfDoc.getPages();
     const firstPage = pages[0];
 
-    firstPage.drawText("Verified by HireMind", {
+    firstPage.drawText("✔ Verified by HireMind", {
       x: 50,
       y: 50,
       size: 14,
@@ -107,16 +127,17 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     });
 
     const stampedPdfBytes = await pdfDoc.save();
-    const stampedPath = `stamped_${req.file.originalname}`;
+    const stampedName = `stamped_${req.file.originalname.replace(/\s+/g, "_")}`;
+    const stampedPath = path.join(stampsDir, stampedName);
     fs.writeFileSync(stampedPath, stampedPdfBytes);
 
-    // 5. Respond
+    // Respond
     res.json({
       success: true,
       proof,
       txId: tx.transactionId.toString(),
       consensusStatus: receipt.status.toString(),
-      stampedFile: stampedPath,
+      stampedFile: stampedName,
     });
   } catch (err) {
     console.error("❌ Error in /upload:", err);
@@ -124,17 +145,16 @@ app.post("/upload", upload.single("file"), async (req, res) => {
   }
 });
 
-// Verify by topicId + sequenceNumber
-// TxID-only verification: accept { txId } (string) in JSON body
+// -------------------- /verify --------------------
+// Accepts { txId: "0.0.123@456.789" } (string)
 app.post("/verify", async (req, res) => {
   try {
-    let { txId } = req.body;
+    let { txId } = req.body || {};
     if (!txId || typeof txId !== "string") {
       return res.status(400).json({ valid: false, error: "txId (string) is required in request body" });
     }
 
-    // -- 1) convert txId to mirror-node transaction format if needed
-    // e.g. 0.0.6871751@1758626830.419285569 -> 0.0.6871751-1758626830-419285569
+    // Normalize txId for mirror node: 0.0.1@123.456 -> 0.0.1-123-456
     let formattedTxId = txId;
     if (txId.includes("@")) {
       const [accountPart, timePart] = txId.split("@");
@@ -143,7 +163,6 @@ app.post("/verify", async (req, res) => {
     }
     formattedTxId = encodeURIComponent(formattedTxId);
 
-    // -- 2) fetch the transaction from mirror node
     const txUrl = `${MIRROR_NODE}/api/v1/transactions/${formattedTxId}`;
     console.log("🔎 Querying transaction:", txUrl);
     const txResp = await fetch(txUrl);
@@ -156,18 +175,16 @@ app.post("/verify", async (req, res) => {
       return res.status(404).json({ valid: false, error: "Transaction not found on mirror node" });
     }
 
-    // transaction metadata
     const tx = txData.transactions[0];
-    const topicId = tx.entity_id || tx.entityId || tx.topic_id || tx.entityId;
+    const topicId = tx.entity_id || tx.entityId || tx.topic_id || tx.topicId;
     const txConsensusTs = tx.consensus_timestamp || tx.consensusTimestamp || tx.valid_start_timestamp;
 
     if (!topicId) {
-      return res.status(400).json({ valid: false, error: "No topicId (entity_id) found for this transaction" });
+      return res.status(400).json({ valid: false, error: "No topicId (entity_id) found for this transaction", tx });
     }
 
-    // -- 3) fetch recent messages for the topic and find the message matching this tx's consensus timestamp
-    // fetch a chunk of recent messages (adjust limit if you expect many)
-    const topicUrl = `${MIRROR_NODE}/api/v1/topics/${topicId}/messages?order=desc&limit=100`;
+    // Fetch recent messages for the topic
+    const topicUrl = `${MIRROR_NODE}/api/v1/topics/${topicId}/messages?order=desc&limit=200`;
     console.log("🔎 Fetching topic messages:", topicUrl);
     const topicResp = await fetch(topicUrl);
     if (!topicResp.ok) {
@@ -179,32 +196,21 @@ app.post("/verify", async (req, res) => {
       return res.status(404).json({ valid: false, error: "No messages found for topic", topicId });
     }
 
-    // find message whose consensus_timestamp matches the transaction's consensus timestamp
+    // Find message by consensus timestamp or by looking for txId inside JSON message
     let foundMsg = topicData.messages.find((m) => m.consensus_timestamp === txConsensusTs);
-
-    // fallback: if not found, try to find message whose decoded proof contains the txId (someproofs store txId)
     if (!foundMsg) {
       for (const m of topicData.messages) {
         try {
           const decoded = Buffer.from(m.message, "base64").toString("utf8");
           const parsed = JSON.parse(decoded);
-          if (parsed.txId && parsed.txId === txId) {
-            foundMsg = m;
-            break;
-          }
-          // some proofs store original tx string under different key
-          if (parsed.tx && parsed.tx === txId) {
-            foundMsg = m;
-            break;
-          }
-        } catch (e) {
-          // ignore invalid json
-        }
+          if (parsed.txId && parsed.txId === txId) { foundMsg = m; break; }
+          if (parsed.tx && parsed.tx === txId) { foundMsg = m; break; }
+          if (parsed.sha256 && parsed.sha256.length > 0 && txId.includes(parsed.sha256)) { foundMsg = m; break; } // optional heuristic
+        } catch (e) { /* ignore parse errors */ }
       }
     }
 
     if (!foundMsg) {
-      // not found — return helpful diagnostics
       const sample = topicData.messages.slice(0, 5).map((m) => ({
         sequence: m.sequence_number,
         consensus_timestamp: m.consensus_timestamp,
@@ -217,7 +223,7 @@ app.post("/verify", async (req, res) => {
       });
     }
 
-    // -- 4) decode found message and parse proof JSON
+    // decode and parse proof
     let decoded;
     try {
       decoded = Buffer.from(foundMsg.message, "base64").toString("utf8");
@@ -232,7 +238,6 @@ app.post("/verify", async (req, res) => {
       return res.status(500).json({ valid: false, error: "Failed to parse proof JSON", decoded });
     }
 
-    // Success: return the proof and basic metadata
     return res.json({
       valid: true,
       message: "Proof found",
@@ -248,36 +253,21 @@ app.post("/verify", async (req, res) => {
   }
 });
 
-
- 
- 
-const pdfParse = require("pdf-parse");
- 
-
- 
-
-app.use(express.static(path.join(__dirname, "public"))); // serve frontend files
-
-/// ------------------- AI Resume Parsing -------------------
- 
-
+// -------------------- AI resume parse (simple) --------------------
 app.post("/parse-resume", upload.single("resume"), async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: "No resume uploaded" });
-    }
+    if (!req.file) return res.status(400).json({ error: "No resume uploaded" });
 
+    const fileBuffer = fs.readFileSync(req.file.path);
     let textContent = "";
 
     if (req.file.mimetype === "application/pdf") {
-      const pdfBuffer = fs.readFileSync(req.file.path);
-      const data = await pdfParse(pdfBuffer);
-      textContent = data.text;
+      const data = await pdfParse(fileBuffer);
+      textContent = data.text || "";
     } else {
       textContent = fs.readFileSync(req.file.path, "utf8");
     }
 
-    // Simple keyword extraction
     const skills = [];
     const skillKeywords = [
       "Accounting", "Finance", "Auditing", "Taxation", "Excel", "Banking",
@@ -286,39 +276,25 @@ app.post("/parse-resume", upload.single("resume"), async (req, res) => {
     ];
 
     skillKeywords.forEach(skill => {
-      if (textContent.toLowerCase().includes(skill.toLowerCase())) {
-        skills.push(skill);
-      }
+      if (textContent.toLowerCase().includes(skill.toLowerCase())) skills.push(skill);
     });
 
-    // Match to roles
     let suggestedRole = "General Candidate";
-    if (skills.includes("Accounting") || skills.includes("Auditing")) {
-      suggestedRole = "Accountant";
-    } else if (skills.includes("Banking") || skills.includes("Compliance")) {
-      suggestedRole = "Banking Analyst";
-    } else if (skills.includes("Finance") || skills.includes("Risk Management")) {
-      suggestedRole = "Financial Analyst";
-    } else if (skills.includes("JavaScript") || skills.includes("React")) {
-      suggestedRole = "Frontend Developer";
-    } else if (skills.includes("Python") || skills.includes("SQL")) {
-      suggestedRole = "Data Analyst";
-    }
+    if (skills.includes("Accounting") || skills.includes("Auditing")) suggestedRole = "Accountant";
+    else if (skills.includes("Banking") || skills.includes("Compliance")) suggestedRole = "Banking Analyst";
+    else if (skills.includes("Finance") || skills.includes("Risk Management")) suggestedRole = "Financial Analyst";
+    else if (skills.includes("JavaScript") || skills.includes("React")) suggestedRole = "Frontend Developer";
+    else if (skills.includes("Python") || skills.includes("SQL")) suggestedRole = "Data Analyst";
 
     res.json({ skills, suggestedRole });
-
   } catch (err) {
     console.error("AI Parse error:", err);
     res.status(500).json({ error: "Failed to parse resume", details: err.message });
   }
 });
 
-
-
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 HireMind backend running on port ${PORT}`);
 });
-
-

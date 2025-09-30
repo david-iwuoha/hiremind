@@ -7,8 +7,8 @@ const txStatusEl = document.getElementById("txStatus");
 const proofHashEl = document.getElementById("proofHash");
 const downloadLink = document.getElementById("downloadLink");
 const downloadWrap = document.getElementById("downloadWrap");
-const fontPath = path.join(process.cwd(), "fonts11", "DejaVuSans.ttf");
-doc.font(fontPath);
+const fontBytes = await fetch("/fonts11/DejaVuSans.ttf").then(res => res.arrayBuffer());
+
 
 
 /* Burger menu */

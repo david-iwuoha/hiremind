@@ -9,7 +9,7 @@ import { PDFDocument, rgb } from "pdf-lib";
 import path from "path";
 import cors from "cors";
 import { fileURLToPath } from "url";
-import pdfParse from "pdf-parse";
+import pdfParse from "pdf-parse-fixed";
 import { Client, PrivateKey, TopicMessageSubmitTransaction } from "@hashgraph/sdk";
 
 dotenv.config();

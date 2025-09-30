@@ -112,7 +112,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     const pages = pdfDoc.getPages();
     const firstPage = pages[0];
 
-    firstPage.drawText("✔ Verified by HireMind", {
+    firstPage.drawText("Verified by HireMind", {
       x: 50,
       y: 50,
       size: 14,

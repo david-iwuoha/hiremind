@@ -41,7 +41,7 @@ form.addEventListener("submit", async (e) => {
     const fd = new FormData();
     fd.append("file", file);
 
-    const resp = await fetch("/upload", { method: "POST", body: fd });
+    const resp = await fetch("https://hiremind.onrender.com/upload", { method: "POST", body: fd });
     const data = await resp.json();
 
     if (!data || data.error || !data.success) {

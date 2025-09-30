@@ -211,7 +211,7 @@ document.getElementById("verifyForm").addEventListener("submit", async (e) => {
   resultBox.className = "result-box";
 
   try {
-    const res = await fetch("/verify", {
+    const res = await fetch("https://hiremind.onrender.com/verify", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

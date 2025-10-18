@@ -98,16 +98,20 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       uploadedAt: new Date().toISOString(),
       issuer: accountId,
     };
+    
 
-    // Submit to Hedera Consensus Service
+        // ---------------- Submit to Hedera Consensus Service ----------------
+    // execute and wait for receipt (use await so we have the receipt before continuing)
     const tx = await new TopicMessageSubmitTransaction()
       .setTopicId(HEDERA_TOPIC_ID)
       .setMessage(JSON.stringify(proof))
       .execute(client);
 
-    tx.getReceipt(client)
-   .then((receipt) => console.log("✅ Hedera confirmed:", receipt.status.toString()))
-   .catch((err) => console.error("Hedera receipt error:", err));
+    // Await receipt properly so we can include status in the response
+    const receipt = await tx.getReceipt(client);
+    console.log("✅ Hedera confirmed:", receipt.status.toString());
+    // --------------------------------------------------------------------
+
 
 
     // Stamp the PDF

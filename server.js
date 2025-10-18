@@ -105,7 +105,9 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       .setMessage(JSON.stringify(proof))
       .execute(client);
 
-    const receipt = await tx.getReceipt(client);
+    tx.getReceipt(client)
+   .then((receipt) => console.log("✅ Hedera confirmed:", receipt.status.toString()))
+   .catch((err) => console.error("Hedera receipt error:", err));
 
 
     // Stamp the PDF

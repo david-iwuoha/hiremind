@@ -5,6 +5,7 @@
   "type": "module",
   "dependencies": {
     "@hashgraph/sdk": "^2.73.1",
+    "cloudinary": "^2.7.0",
     "compromise": "^14.14.4",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",

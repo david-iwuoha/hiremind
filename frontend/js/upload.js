@@ -57,13 +57,22 @@ form.addEventListener("submit", async (e) => {
     txStatusEl.textContent = data.consensusStatus || "n/a";
     proofHashEl.textContent = data.proof?.sha256 || "n/a";
 
-    if (data.stampedFile) {
-      downloadLink.href = `/download/${encodeURIComponent(data.stampedFile)}`;
-      downloadLink.textContent = "Download sealed PDF";
-      downloadWrap.style.display = "block";
-    } else {
-      downloadWrap.style.display = "none";
-    }
+   // if (data.stampedFile) {
+    //  downloadLink.href = `/download/${encodeURIComponent(data.stampedFile)}`;
+    //  downloadLink.textContent = "Download sealed PDF";
+    //  downloadWrap.style.display = "block";
+   // } else {
+    //  downloadWrap.style.display = "none";
+   // }
+
+   if (data.stampedFileUrl) {
+  downloadLink.href = data.stampedFileUrl; // Direct Cloudinary link
+  downloadLink.textContent = "Download sealed PDF";
+  downloadWrap.style.display = "block";
+} else {
+  downloadWrap.style.display = "none";
+}
+
 
     statusEl.textContent = "Done ✅";
     resultEl.hidden = false;

@@ -14,6 +14,16 @@ import { Client, PrivateKey, TopicMessageSubmitTransaction } from "@hashgraph/sd
 
 dotenv.config();
 
+//CLOUDINARY IS FOR PDF STORAGE AFTER UPLOADING 
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+//END OF CLOUDINARY
+
 // ESM __dirname fix
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -88,6 +98,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
+    // Read and hash file
     const fileBuffer = fs.readFileSync(req.file.path);
     const fileHash = crypto.createHash("sha256").update(fileBuffer).digest("hex");
 
@@ -98,26 +109,20 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       uploadedAt: new Date().toISOString(),
       issuer: accountId,
     };
-    
 
-        // ---------------- Submit to Hedera Consensus Service ----------------
-    // execute and wait for receipt (use await so we have the receipt before continuing)
+    // ---------------- Submit to Hedera Consensus Service ----------------
     const tx = await new TopicMessageSubmitTransaction()
       .setTopicId(HEDERA_TOPIC_ID)
       .setMessage(JSON.stringify(proof))
       .execute(client);
 
-    // Await receipt properly so we can include status in the response
     const receipt = await tx.getReceipt(client);
     console.log("✅ Hedera confirmed:", receipt.status.toString());
     // --------------------------------------------------------------------
 
-
-
-    // Stamp the PDF
+    // ---------------- Stamp the PDF ----------------
     const pdfDoc = await PDFDocument.load(fileBuffer);
-    const pages = pdfDoc.getPages();
-    const firstPage = pages[0];
+    const firstPage = pdfDoc.getPages()[0];
 
     firstPage.drawText("Verified by HireMind", {
       x: 50,
@@ -135,17 +140,31 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 
     const stampedPdfBytes = await pdfDoc.save();
     const stampedName = `stamped_${req.file.originalname.replace(/\s+/g, "_")}`;
-    const stampedPath = path.join(stampsDir, stampedName);
-    fs.writeFileSync(stampedPath, stampedPdfBytes);
+    const tempPath = path.join(uploadsDir, stampedName);
+    fs.writeFileSync(tempPath, stampedPdfBytes);
+    // ------------------------------------------------
 
-    // Respond
+    // ---------------- Upload to Cloudinary ----------------
+    const uploadResult = await cloudinary.uploader.upload(tempPath, {
+      resource_type: "raw", // for PDFs
+      folder: "hiremind-stamped", // optional Cloudinary folder
+      public_id: stampedName.replace(".pdf", ""),
+    });
+
+    // Delete local temp file after upload
+    fs.unlinkSync(tempPath);
+    fs.unlinkSync(req.file.path);
+    // -------------------------------------------------------
+
+    // ✅ Respond to frontend with everything needed
     res.json({
       success: true,
       proof,
       txId: tx.transactionId.toString(),
       consensusStatus: receipt.status.toString(),
-      stampedFile: stampedName,
+      stampedFileUrl: uploadResult.secure_url, // direct Cloudinary URL
     });
+
   } catch (err) {
     console.error("❌ Error in /upload:", err);
     res.status(500).json({ error: err.message });

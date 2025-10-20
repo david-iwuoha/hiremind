@@ -146,7 +146,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 
     // ---------------- Upload to Cloudinary ----------------
     const uploadResult = await cloudinary.uploader.upload(tempPath, {
-      resource_type: "raw", // for PDFs
+      resource_type: "auto", // let cloudinary detect PDF automatically
       folder: "hiremind-stamped", // optional Cloudinary folder
       public_id: stampedName.replace(".pdf", ""),
     });

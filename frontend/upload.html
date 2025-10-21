@@ -4,14 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>HireMind — Upload Credential</title>
-
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
   <link rel="icon" href="images/icon.png">
   <link rel="stylesheet" href="css/upload.css">
 </head>
 <body>
+  <!-- Header -->
   <header class="site-header">
     <div class="logo">HireMind</div>
     <nav class="nav-links" id="navLinks">
@@ -20,95 +17,70 @@
       <a href="shortlist.html">Shortlist</a>
       <a href="api.html">API Docs</a>
     </nav>
-    <div class="burger" id="burger" aria-label="menu" role="button">&#9776;</div>
+    <div class="burger" id="burger">&#9776;</div>
   </header>
 
-  <main class="page-wrap">
-    <section class="upload-card glass">
-      <header class="card-header">
-        <h1>HireMind Verification Portal</h1>
-        <div class="underline"></div>
-        <p class="lead">Anchor credential proofs on Hedera for immutable verification.</p>
-      </header>
+  <!-- Main Upload Section -->
+  <main class="upload-container">
+    <h1>Upload & Verify Credentials</h1>
+    <p class="subtitle">Anchor credential proofs on Hedera for immutable verification.</p>
 
-      <form id="uploadForm" class="upload-area" method="POST" enctype="multipart/form-data" novalidate>
-        <input id="fileInput" name="file" type="file" accept="application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+    <form id="uploadForm" class="upload-box" method="POST" enctype="multipart/form-data">
+      <label for="fileInput" class="drop-area">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon-upload" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 8l-3-3m3 3l3-3" />
+        </svg>
+        <p>Drag & drop PDF here or <span>browse</span></p>
+        <input id="fileInput" type="file" accept="application/pdf" hidden>
+      </label>
 
-        <label for="fileInput" class="drop-area" id="dropArea">
-          <svg class="icon-upload" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M12 3v9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M8.5 7.5L12 3l3.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M4 15v1a2 2 0 002 2h12a2 2 0 002-2v-1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+      <button id="uploadBtn" type="submit" class="btn primary">Upload & Verify</button>
+      <a href="dashboard.html" class="btn secondary">Go to Dashboard</a>
+    </form>
 
-          <div class="drop-text">
-            <strong>Drag your document here</strong>
-            <span class="muted">or click to upload</span>
-            <small class="hint">Supported formats: PDF, DOCX</small>
-          </div>
-        </label>
+    <!-- Status -->
+    <div id="status" class="status">
+      <!-- spinner will be injected dynamically -->
+    </div>
 
-        <div class="actions-row">
-          <button id="uploadBtn" type="submit" class="btn primary">Upload & Verify</button>
-          <a href="dashboard.html" class="btn secondary">Back to Dashboard</a>
-        </div>
-
-        <div class="progress-wrap" id="progressWrap" aria-hidden="true">
-          <div class="progress-bar" id="progressBar" style="width:0%"></div>
-        </div>
-
-      </form>
-
-      <div id="status" class="status" aria-live="polite"></div>
-
-      <div id="result" class="result" hidden>
-        <h2>Verification Result</h2>
-
-        <div class="result-row">
-          <strong>Tx ID:</strong>
-          <span id="txId" class="mono">—</span>
-          <button class="copy-btn" data-copy="txId" title="Copy TxID">Copy</button>
-        </div>
-
-        <div class="result-row">
-          <strong>Status:</strong>
-          <span id="txStatus">—</span>
-        </div>
-
-        <div class="result-row">
-          <strong>Proof hash:</strong>
-          <span id="proofHash" class="mono">—</span>
-          <button class="copy-btn" data-copy="proofHash" title="Copy hash">Copy</button>
-        </div>
-
-        <p id="downloadWrap" style="display:none">
-          <a id="downloadLink" href="#" target="_blank" rel="noopener noreferrer" class="btn gradient">
-            View stamped copy
-          </a>
-        </p>
+    <!-- Result -->
+    <div id="result" class="result" hidden>
+      <h2>Verification Result</h2>
+      <div class="result-row">
+        <strong>Tx ID:</strong> 
+        <span id="txId"></span>
+        <button class="copy-btn" data-copy="txId">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M8 7h13v13H8z"/><path d="M5 17H4V4h13v1H5z"/></svg>
+        </button>
       </div>
-    </section>
+      <div class="result-row">
+        <strong>Status:</strong> 
+        <span id="txStatus"></span>
+      </div>
+      <div class="result-row">
+        <strong>Proof hash:</strong> 
+        <span id="proofHash"></span>
+        <button class="copy-btn" data-copy="proofHash">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M8 7h13v13H8z"/><path d="M5 17H4V4h13v1H5z"/></svg>
+        </button>
+      </div>
+   <!--  <p id="downloadWrap">
+        <a id="downloadLink" href="#" download class="btn primary" target="_blank">Download sealed PDF</a>
+      </p>-->
+
+      <p id="downloadWrap">
+  <a id="downloadLink" href="#" target="_blank" rel="noopener noreferrer" class="btn primary">
+    View sealed PDF
+  </a>
+</p>
+
+    </div>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer">
-    <small>© 2025 HireMind. Powered by Hedera.</small>
+    <small>© 2025 HireMind • Hedera-verified recruitment</small>
   </footer>
-
-  <!-- Success modal -->
-  <div id="successModal" class="modal" hidden>
-    <div class="modal-inner glass">
-      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
-      <div class="checkmark" aria-hidden="true">
-        <svg width="96" height="96" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="#38b000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-      </div>
-      <h3>Your document has been uploaded and verified</h3>
-      <p class="muted">You can now download your stamped copy.</p>
-      <div class="modal-actions">
-        <a id="modalDownload" class="btn gradient" href="#" target="_blank" rel="noopener noreferrer">Download stamped PDF</a>
-        <button id="modalCloseBtn" class="btn secondary">Close</button>
-      </div>
-    </div>
-  </div>
 
   <script src="js/upload.js"></script>
 </body>

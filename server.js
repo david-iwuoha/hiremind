@@ -5,8 +5,7 @@ import multer from "multer";
 import crypto from "crypto";
 import fs from "fs";
 import dotenv from "dotenv";
-//import { PDFDocument, rgb } from "pdf-lib";
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import { PDFDocument, rgb } from "pdf-lib";
 import path from "path";
 import cors from "cors";
 import { fileURLToPath } from "url";
@@ -121,131 +120,29 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     console.log("✅ Hedera confirmed:", receipt.status.toString());
     // --------------------------------------------------------------------
 
-    
+    // ---------------- Stamp the PDF ----------------
+    const pdfDoc = await PDFDocument.load(fileBuffer);
+    const firstPage = pdfDoc.getPages()[0];
 
-    // ---------------- Stamp the PDF (improved, HireMind-brand) ----------------
-const pdfDoc = await PDFDocument.load(fileBuffer);
-
-// embed a standard font (clean modern sans-serif feel)
-const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-// choose brand color and success color (rgb expects 0..1 floats)
-const brandRgb = rgb(0 / 255, 160 / 255, 252 / 255); // #00a0fc
-const successRgb = rgb(74 / 255, 222 / 255, 128 / 255); // #4ade80
-
-const pages = pdfDoc.getPages();
-const firstPage = pages[0];
-const { width, height } = firstPage.getSize();
-
-// --- badge / stamp layout params ---
-const padding = 12;
-const badgeWidth = 340; // adjust if you need smaller/larger
-const badgeHeight = 72;
-const badgeX = 40; // distance from left
-const badgeY = 40; // distance from bottom (or change to top)
-// If you prefer bottom-right: badgeX = width - badgeWidth - 40; badgeY = 40;
-
-// Optional: create a stamps directory next to uploads
-const stampsDir = path.join(uploadsDir, "stamps");
-if (!fs.existsSync(stampsDir)) fs.mkdirSync(stampsDir, { recursive: true });
-
-// Draw semi-opaque rounded rectangle (glass-like) as badge background
-firstPage.drawRectangle({
-  x: badgeX,
-  y: badgeY,
-  width: badgeWidth,
-  height: badgeHeight,
-  borderRadius: 12,
-  color: rgb(1, 1, 1),
-  opacity: 0.9,
-  borderColor: brandRgb,
-  borderWidth: 0.8,
-  // we also add a faint shadow by drawing a subtle darker rect behind it (optional)
-});
-
-// Draw a small circular check badge on left
-const circleRadius = 22;
-const circleCX = badgeX + padding + circleRadius;
-const circleCY = badgeY + badgeHeight / 2;
-
-firstPage.drawCircle
-  ? firstPage.drawCircle({ // some pdf-lib versions have drawEllipse/drawCircle; try and fall back if not present
-      x: circleCX,
-      y: circleCY,
-      size: circleRadius, // some versions use size; if error, see below note
-      color: brandRgb,
-    })
-  : firstPage.drawEllipse({ // fallback to ellipse API (most pdf-lib versions support this)
-      x: circleCX,
-      y: circleCY,
-      xScale: circleRadius,
-      yScale: circleRadius,
-      color: brandRgb,
+    firstPage.drawText("Verified by HireMind", {
+      x: 50,
+      y: 50,
+      size: 14,
+      color: rgb(0, 0.6, 0),
     });
 
-// White checkmark text inside the circle (simple and reliable)
-// Use a bold-ish large glyph for the check — if you want an SVG check, embed as image instead.
-firstPage.drawText("✓", {
-  x: circleCX - 8,
-  y: circleCY - 12,
-  size: 22,
-  font,
-  color: rgb(1, 1, 1),
-});
+    firstPage.drawText(`TxID: ${tx.transactionId.toString()}`, {
+      x: 50,
+      y: 30,
+      size: 10,
+      color: rgb(0, 0, 0),
+    });
 
-// Main title text
-const titleX = badgeX + padding + circleRadius * 2 + 8;
-const titleY = badgeY + badgeHeight - 22;
-firstPage.drawText("Verified by HireMind", {
-  x: titleX,
-  y: titleY,
-  size: 16,
-  font,
-  color: brandRgb,
-});
-
-// Small meta (Tx ID and timestamp) — wrap long TxIDs to smaller font
-const txText = `TxID: ${tx.transactionId.toString()}`;
-const timeText = `Anchored: ${new Date().toISOString().replace("T", " ").split(".")[0]} UTC`;
-
-firstPage.drawText(txText, {
-  x: titleX,
-  y: titleY - 18,
-  size: 9.5,
-  font,
-  color: rgb(0.12, 0.16, 0.2), // dark gray
-});
-
-firstPage.drawText(timeText, {
-  x: titleX,
-  y: titleY - 32,
-  size: 9.5,
-  font,
-  color: rgb(0.45, 0.52, 0.56),
-});
-
-// If you want a tiny Hedera logo PNG in the badge (optional):
-// const hedLogoPath = path.join(__dirname, 'assets', 'hedera-mark.png');
-// if (fs.existsSync(hedLogoPath)) {
-//   const hedBytes = fs.readFileSync(hedLogoPath);
-//   const hedImg = await pdfDoc.embedPng(hedBytes);
-//   const imgDims = hedImg.scale(0.06); // scale to desired size
-//   firstPage.drawImage(hedImg, {
-//     x: badgeX + badgeWidth - padding - (imgDims.width || 24),
-//     y: badgeY + (badgeHeight/2) - ((imgDims.height||24)/2),
-//     width: imgDims.width || 24,
-//     height: imgDims.height || 24,
-//   });
-// }
-
-// Save stamped PDF to stamps folder
-const stampedPdfBytes = await pdfDoc.save();
-const safeOriginal = req.file.originalname.replace(/\s+/g, "_");
-const stampedName = `stamped_${safeOriginal.endsWith(".pdf") ? safeOriginal : safeOriginal + ".pdf"}`;
-const tempPath = path.join(stampsDir, stampedName);
-fs.writeFileSync(tempPath, stampedPdfBytes);
-//......................................
-
+    const stampedPdfBytes = await pdfDoc.save();
+    const stampedName = `stamped_${req.file.originalname.replace(/\s+/g, "_")}`;
+    const tempPath = path.join(uploadsDir, stampedName);
+    fs.writeFileSync(tempPath, stampedPdfBytes);
+    // ------------------------------------------------
 
     // ---------------- Upload to Cloudinary ----------------
     const uploadResult = await cloudinary.uploader.upload(tempPath, {

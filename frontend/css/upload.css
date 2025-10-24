@@ -70,6 +70,7 @@ body {
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
+
 .drop-area {
   border: 2px dashed var(--border-dash);
   padding: 2rem;
@@ -81,20 +82,46 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 0.6rem;
+  text-align: center;
 }
+
 .drop-area:hover {
   border-color: var(--base-color);
   background: #f0f6ff;
 }
+
 .drop-area span {
   color: var(--base-color);
   font-weight: bold;
   text-decoration: underline;
 }
+
 .icon-upload {
   width: 40px;
   height: 40px;
   color: var(--base-color);
+}
+
+/* New File Info Styles */
+.file-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 1rem;
+  color: var(--base-color);
+  font-weight: normal;
+  display: none; /* Initially hidden */
+}
+
+.file-info .pdf-icon {
+  width: 20px;
+  height: 20px;
+  fill: var(--base-color); /* Apply color to the PDF icon */
+}
+
+.pdf-icon {
+  fill: var(--base-color);
 }
 
 /* Buttons */
@@ -130,9 +157,53 @@ body {
   animation: spin 1s linear infinite;
   margin-bottom: 0.5rem;
 }
+
 @keyframes spin {
   from { transform: rotate(0); }
   to { transform: rotate(360deg); }
+}
+
+/* New Done Popup */
+.done-popup {
+  width: 300px;
+  height: 150px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+.done-content h2 {
+  color: #00a0fc;
+  font-size: 1.5rem;
+}
+
+.loader-bar-container {
+  margin-top: 20px;
+  background: #e0e0e0;
+  width: 80%;
+  height: 8px;
+  border-radius: 5px;
+  margin: 10px auto;
+}
+
+.loader-bar {
+  width: 0%;
+  height: 100%;
+  background: #00a0fc;
+  border-radius: 5px;
+  transition: width 0.1s ease;
+}
+
+.done-content p {
+  margin-top: 20px;
+  color: #666;
 }
 
 /* Result Section */
@@ -141,16 +212,19 @@ body {
   text-align: left;
   padding: 1.5rem;
   border-radius: 12px;
-  background: #f9fbff;
+  background: #d1daee;
   box-shadow: 0 4px 14px rgba(0,0,0,0.06);
   animation: fadeIn 0.4s ease;
 }
+
 .result-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin: 0.5rem 0;
+  
 }
+
 .copy-btn {
   background: none;
   border: none;
@@ -158,6 +232,7 @@ body {
   color: var(--base-color);
   padding: 0.2rem;
 }
+
 .copy-btn:hover { color: #005fcc; }
 
 @keyframes fadeIn {
@@ -190,4 +265,11 @@ body {
   .site-header .nav-links.active { display: flex; }
   .burger { display: block; }
   .upload-box { padding: 1.5rem; }
+
+  .result-row #proofHash{
+     word-wrap: break-word; /* Break long words like hashes to the next line */
+  overflow-wrap: break-word; /* For better support across browsers */
+  white-space: normal; /* Ensure the text can wrap inside the container */
+  width: 70%; /* Let it take the full width of the parent container */
+  }
 }

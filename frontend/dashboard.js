@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (hour < 12) greet = "Good morning";
     else if (hour < 18) greet = "Good afternoon";
     else greet = "Good evening";
-    greetingTitle.textContent = `${greet}, ${displayName.split(" ")[0]}`;
+    greetingTitle.innerHTML = `${greet}, ${displayName.split(" ")[0]} 👋`; // Add the waving emoji
 
     // simple profile completeness calc
     let completeness = 30;

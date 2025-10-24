@@ -20,10 +20,8 @@ const resultBox = document.getElementById("result");
 const txInput = document.getElementById("txId");
 
 /* ---------- Demo company data & assets ---------- */
-// You MUST place a Dora Hacks logo in repo as: dorahacks-logo.png
-// Also add company-placeholder.png as fallback for the other companies.
 const COMPANY_LOGOS = {
-  dora: "dorahacks-logo.png",           // ➜ add this file to repo
+  dora: "dorahacks-logo.png",
   acme: "company-placeholder.png",
   globex: "company-placeholder.png",
   stark: "company-placeholder.png",
@@ -31,7 +29,6 @@ const COMPANY_LOGOS = {
 };
 
 /* ---------- initial modal behavior ---------- */
-// show modal on page load (block access until validated)
 function showModal() {
   accessModal.style.display = "flex";
   mainContent.setAttribute("aria-hidden", "true");
@@ -40,10 +37,8 @@ function hideModal() {
   accessModal.style.display = "none";
   mainContent.removeAttribute("aria-hidden");
 }
-// default show
 showModal();
 
-// update logo when company changes
 function updateCompanyLogo() {
   const key = companySelect.value;
   companyLogo.src = COMPANY_LOGOS[key] || "company-placeholder.png";
@@ -51,57 +46,32 @@ function updateCompanyLogo() {
 companySelect.addEventListener("change", updateCompanyLogo);
 updateCompanyLogo(); // initial
 
-// modal cancel -> just keep blocked (for demo just close to go back)
 modalCancel.addEventListener("click", () => {
   modalError.textContent = "";
-  // if you want to deny cancel, remove the following line.
-  // We'll close and still keep the page usable; adjust as needed.
   hideModal();
 });
 
-// modal submit -> validate company + pin
 modalSubmit.addEventListener("click", (e) => {
   e.preventDefault();
   const selected = companySelect.value;
   const pin = (companyPin.value || "").trim();
   const correctPin = "090845";
 
-  // Only Dora Hacks can be unlocked in this demo with the correct pin
   if (selected === "dora" && pin === correctPin) {
     modalError.textContent = "";
     hideModal();
-    // load table after allowed
     loadVerifiedDocs();
     return;
   }
 
-  // For all others or wrong pin -> show error
   modalError.textContent = "Incorrect PIN or access denied for selected company.";
-  // tiny shake animation
   const box = document.querySelector(".modal-box");
   box.classList.remove("shake");
   void box.offsetWidth;
   box.classList.add("shake");
 });
 
-/* small CSS shake helper (will be defined in CSS) */
-const style = document.createElement("style");
-style.textContent = `
-.modal-box.shake { animation: shake .36s ease; }
-@keyframes shake {
-  10% { transform: translateX(-6px); }
-  30% { transform: translateX(6px); }
-  50% { transform: translateX(-4px); }
-  70% { transform: translateX(4px); }
-  100% { transform: translateX(0); }
-}
-`;
-document.head.appendChild(style);
-
 /* ---------- Verified table loading ---------- */
-// expected backend endpoint: GET /verified
-// expected response: JSON array of objects:
-// [{ txId, fileName, sha256, issuer, verifiedAt }, ...]
 async function loadVerifiedDocs() {
   tableNote.textContent = "Loading...";
   try {
@@ -111,7 +81,6 @@ async function loadVerifiedDocs() {
     populateTable(data);
     tableNote.textContent = "Loaded from backend.";
   } catch (err) {
-    // fallback sample data (safe for demo)
     console.warn("Fetch /verified failed, using sample data:", err.message);
     const sample = [
       { txId: "0.0.6871751@1758538332.951137995", fileName: "test.pdf", sha256: "6e5c0a3b...", issuer: "0.0.6871751", verifiedAt: "2025-09-22T10:52:16Z" },
@@ -135,10 +104,10 @@ function populateTable(records = []) {
     const viewLink = `<a class="btn small" href="https://hashscan.io/testnet/tx/${encodeURIComponent(r.txId)}" target="_blank" rel="noopener">View</a>`;
 
     tr.innerHTML = `
-      <td>${i+1}</td>
+      <td>${i + 1}</td>
       <td class="mono">${escapeHtml(r.txId || "")}</td>
       <td>${escapeHtml(r.fileName || "")}</td>
-      <td class="mono">${escapeHtml(r.sha256 || "").slice(0, 20)}${(r.sha256 && r.sha256.length>20) ? "…" : ""}</td>
+      <td class="mono">${escapeHtml(r.sha256 || "").slice(0, 20)}${(r.sha256 && r.sha256.length > 20) ? "…" : ""}</td>
       <td class="mono">${escapeHtml(r.issuer || "")}</td>
       <td>${escapeHtml(new Date(r.verifiedAt || Date.now()).toLocaleString())}</td>
       <td>${viewLink}</td>
@@ -147,20 +116,17 @@ function populateTable(records = []) {
   });
 }
 
-// small safe HTML escaper
 function escapeHtml(s){ return String(s || "").replace(/[&<>"']/g, (m)=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
 
 /* refresh button */
 refreshTableBtn.addEventListener("click", loadVerifiedDocs);
 
 /* ---------- Observe result box to auto-add successful verifications to table ---------- */
-/* We do not alter your original verify code. Instead we watch the result DOM text and when it shows success we add an entry to the table. */
 const resultObserver = new MutationObserver((mutations) => {
   for (const m of mutations) {
     if (m.type === "childList" || m.type === "characterData") {
       const text = resultBox.textContent || "";
       if (text.includes("✅ Document is authentic")) {
-        // Grab txId from input and push to table (basic record)
         const txId = (txInput && txInput.value) || "unknown";
         const rec = {
           txId,
@@ -169,9 +135,7 @@ const resultObserver = new MutationObserver((mutations) => {
           issuer: "unknown",
           verifiedAt: new Date().toISOString()
         };
-        // Prepend row to the table
         prependRow(rec);
-        // stop here for this mutation
         break;
       }
     }
@@ -185,30 +149,33 @@ function prependRow(r) {
     <td>—</td>
     <td class="mono">${escapeHtml(r.txId)}</td>
     <td>${escapeHtml(r.fileName)}</td>
-    <td class="mono">${escapeHtml(r.sha256).slice(0,20)}…</td>
+    <td class="mono">${escapeHtml(r.sha256).slice(0, 20)}…</td>
     <td class="mono">${escapeHtml(r.issuer)}</td>
     <td>${new Date(r.verifiedAt).toLocaleString()}</td>
     <td><a class="btn small" href="https://hashscan.io/testnet/tx/${encodeURIComponent(r.txId)}" target="_blank" rel="noopener">View</a></td>
   `;
-  // insert at top
   verifiedTbody.insertBefore(tr, verifiedTbody.firstChild);
 }
 
-/* ---------- Initial load: only after access is granted (modal hide) ---------- */
-// table will be loaded after successful modal auth
-// If you want to auto-load for dev, uncomment:
-// loadVerifiedDocs();
-
-/* ---------- KEEP YOUR ORIGINAL VERIFY HANDLER BELOW — COPIED EXACTLY ---------- */
-/* do not edit this block unless you need to change server contract */
+/* ---------- Verification Handler ---------- */
 document.getElementById("verifyForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const txId = document.getElementById("txId").value;
 
-  const resultBox = document.getElementById("result");
-  resultBox.textContent = "⏳ Verifying...";
-  resultBox.className = "result-box";
+  // Show loader pop-up
+  const verificationPopup = document.createElement("div");
+  verificationPopup.classList.add("verification-result-popup");
+  verificationPopup.innerHTML = `
+    <div class="popup-content">
+      <h2>Verifying...</h2>
+      <div class="loader-bar-container">
+        <div class="loader-bar"></div>
+      </div>
+      <p>Please wait while we verify the document.</p>
+    </div>
+  `;
+  document.body.appendChild(verificationPopup);
 
   try {
     const res = await fetch("https://hiremind.onrender.com/verify", {
@@ -225,24 +192,28 @@ document.getElementById("verifyForm").addEventListener("submit", async (e) => {
 
     const data = await res.json();
 
-    if (data.valid) {
-      resultBox.textContent = "✅ Document is authentic!";
-      resultBox.classList.add("valid");
-    } else {
-      resultBox.textContent = "❌ Not authentic.\n\n" + (data.message || data.error || "Verification failed");
-      resultBox.classList.add("invalid");
-    }
+    // Handle result and pop-up close after 1 second to allow users to see the loader
+    setTimeout(() => {
+      verificationPopup.remove(); // Remove loader pop-up
+
+      const resultBox = document.getElementById("result");
+      if (data.valid) {
+        resultBox.textContent = "✅ Document is authentic!";
+        resultBox.classList.add("valid");
+      } else {
+        resultBox.textContent = "❌ Not authentic.\n\n" + (data.message || data.error || "Verification failed");
+        resultBox.classList.add("invalid");
+      }
+    }, 1000); // Wait for loader to complete and close after that
+
   } catch (err) {
+    const resultBox = document.getElementById("result");
     resultBox.textContent = "❌ Not Authentic: " + err.message;
     resultBox.classList.add("invalid");
+
+    // Ensure the popup closes even in case of error
+    setTimeout(() => {
+      verificationPopup.remove(); // Remove loader pop-up
+    }, 1000); // Wait for error message to show, then remove popup
   }
 });
-/* ---------- end original handler ---------- */
-
-const burger = document.getElementById("burger");
-const recRight = document.querySelector(".rec-right");
-
-burger.addEventListener("click", () => {
-  recRight.classList.toggle("active");
-});
-

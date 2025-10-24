@@ -27,11 +27,17 @@
 
     <form id="uploadForm" class="upload-box" method="POST" enctype="multipart/form-data">
       <label for="fileInput" class="drop-area">
+        <!-- The drop area where file name and size will appear after upload -->
         <svg xmlns="http://www.w3.org/2000/svg" class="icon-upload" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 8l-3-3m3 3l3-3" />
         </svg>
         <p>Drag & drop PDF here or <span>browse</span></p>
         <input id="fileInput" type="file" accept="application/pdf" hidden>
+        
+        <!-- New div where file name and size will appear -->
+        <div id="fileInfo" class="file-info" hidden>
+          <!-- File info will be dynamically inserted here -->
+        </div>
       </label>
 
       <button id="uploadBtn" type="submit" class="btn primary">Upload & Verify</button>
@@ -41,6 +47,17 @@
     <!-- Status -->
     <div id="status" class="status">
       <!-- spinner will be injected dynamically -->
+    </div>
+
+    <!-- New "Done" Pop-up (initially hidden) -->
+    <div id="donePopup" class="done-popup" style="display: none;">
+      <div class="done-content">
+        <h2>Done</h2>
+        <div class="loader-bar-container">
+          <div id="loaderBar" class="loader-bar"></div>
+        </div>
+        <p>Verification complete!</p>
+      </div>
     </div>
 
     <!-- Result -->
@@ -64,16 +81,12 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M8 7h13v13H8z"/><path d="M5 17H4V4h13v1H5z"/></svg>
         </button>
       </div>
-   <!--  <p id="downloadWrap">
-        <a id="downloadLink" href="#" download class="btn primary" target="_blank">Download sealed PDF</a>
-      </p>-->
 
       <p id="downloadWrap">
-  <a id="downloadLink" href="#" target="_blank" rel="noopener noreferrer" class="btn primary">
-    View sealed PDF
-  </a>
-</p>
-
+        <a id="downloadLink" href="#" target="_blank" rel="noopener noreferrer" class="btn primary">
+          View sealed PDF
+        </a>
+      </p>
     </div>
   </main>
 

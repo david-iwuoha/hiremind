@@ -180,4 +180,4 @@ MIT
 
 ---
 
-Architecture image source: [Mariposa Architecture (Cloudinary)](https://res.cloudinary.com/dhbol6euq/image/upload/v1754676846/Mariposa_wallet_3_cfhtbr.png)
+Architecture image source: [HireMind Architecture (Cloudinary)](https://res.cloudinary.com/denaqakxw/image/upload/v1761322052/HireMind_Architecture_ltw64n.png)

@@ -15,7 +15,7 @@
 }
 .auth-image img {
 
-  background: url("images/4214558.jpg") no-repeat center center/cover;
+  background: url("../images/4214558.jpg") no-repeat center center/cover;
   /* ensures it fills the entire left side */
   height: 100vh; /* full viewport height */
    height: 100%;  /* fill parent height */

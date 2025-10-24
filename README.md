@@ -1,56 +1,67 @@
-# Mariposa — Hedera Agentic Wallet, HCS Evaluation & Token Ops
+# HireMind — Transforming Recruitment with Blockchain + AI
 
-Mariposa is an end‑to‑end, agentic wallet and evaluation platform built for the Hedera Hashgraph ecosystem. It combines:
+HireMind is a Hedera-backed career trust platform. We notarize and issue verifiable credential badges (hashed documents/NFTs) for instant, secure verification of skills/certificates, ensuring complete trust and security for employers. It combines:
 
-- AI-driven agents with persistent memory for intent understanding
-- Hedera Agent Kit for on-chain actions (HTS token ops, HCS topics, queries)
-- A production-ready Node/Express backend and a Next.js frontend
-- A structured evaluation pipeline over Hedera Consensus Service (HCS)
+- DLT-powered verification: Immutable, tamper-proof records on Hedera for all credentials
+- Credential issuance and tracking: Users receive verifiable badges/NFTs for certificates and documents.
+- Seamless integration: Node/Express backend with a Next.js frontend for smooth user experience.
+- Efficient verification pipeline: Structured document validation using Hedera Consensus Service (HCS) for real-time trust verification.
 
 This README emphasizes Hedera capabilities to align with Hedera hackathon requirements.
 
 ## Architecture
 
-![Mariposa Architecture](https://res.cloudinary.com/dhbol6euq/image/upload/v1754676846/Mariposa_wallet_3_cfhtbr.png)
+![HireMind Architecture](https://res.cloudinary.com/denaqakxw/image/upload/v1761322052/HireMind_Architecture_ltw64n.png)
 
-Reference: https://res.cloudinary.com/dhbol6euq/image/upload/v1754676846/Mariposa_wallet_3_cfhtbr.png
+Reference: https://res.cloudinary.com/denaqakxw/image/upload/v1761322052/HireMind_Architecture_ltw64n.png
 
-## Why Hedera for Mariposa
+## Why Hedera for HireMind
 
-- Low, predictable fees and carbon‑negative network for consumer-grade UX
-- Fast finality for interactive agent flows and near‑real‑time evaluations
-- HTS (Hedera Token Service) to mint and manage tokens directly via Agent tools
-- HCS (Hedera Consensus Service) to orchestrate transparent, auditable evaluation workflows
-- Mature SDKs and the Hedera Agent Kit for clean, composable tool integrations
+- Immutable records – Documents can’t be altered.
+- Fast verification – Checks happen instantly.
+- Low cost – Transactions are inexpensive.
+- Secure – Data is well-protected.
+- Scalable – Handles growth easily.
 
 ## Monorepo Overview
 
 text
-mariposa/
-├─ app/                     # Next.js app (UI)
-├─ components/              # React components (dashboard, wallet, agents)
-├─ Backend/                 # Node/Express API with Hedera integrations
-│  ├─ controllers/          # Hedera + agent controllers
-│  ├─ routes/               # REST API routes (incl. /hedera-tools/*)
-│  ├─ services/             # Hedera Agent Kit service
-│  ├─ models/               # Mongoose models (Agent, EvaluationTopic, ...)
-│  └─ HEDERA_AGENT_KIT_README.md
-├─ smart-contracts/         # Hardhat project (Sei EVM sample; optional)
-└─ public/                  # Static assets
+HireMind/
+├─ backend/               # Express backend with server.js and environment config
+│  ├─ server.js
+│  ├─ node_modules/
+│  ├─ package.json
+│  ├─ package-lock.json
+│  └─ .env
+├─ docs/                  # Documentation for the project
+├─ files/                 # Uploaded files or storage folder
+├─ frontend/              # Frontend code: HTML, CSS, JS
+├─ logs/                  # Application logs
+├─ node_modules/
+├─ plans/                 # Project plans or roadmap files
+├─ upload/                # Temporary uploads or upload handler scripts
+├─ .gitignore
+├─ hedera-hcs-test.js     # Scripts for testing Hedera HCS
+├─ hedera-hcs-verify.js   # Scripts for verifying Hedera HCS messages
+├─ package.json
+├─ package-lock.json
+├─ README.md              # Project overview and instructions
+└─ testHedera.js          # Additional Hedera testing scripts
+
 
 
 Core Hedera integration lives in:
 
-- Backend/services/hederaAgentKitService.js — Toolkit wiring, HTS/HCS/Queries
-- Backend/controllers/hederaAgentKitController.js — REST handlers
-- Backend/routes/hederaAgentKit.js — Exposes /hedera-tools/* endpoints
+- backend/server.js — Main backend server where Hedera services are initialized
+- hedera-hcs-test.js — Scripts for testing Hedera HCS messaging
+- hedera-hcs-verify.js — Scripts for verifying Hedera HCS messages
+- testHedera.js — Additional Hedera testing scripts
 
 ## Quick Start
 
 ### Prerequisites
 
 - Node.js ≥ 18, npm
-- MongoDB instance
 - Hedera testnet account (Account ID, Private Key, Public Key)
 
 ### 1) Backend setup
@@ -64,7 +75,6 @@ cp config/env.example .env
 # HEDERA_PRIVATE_KEY=...
 # HEDERA_PUBLIC_KEY=...
 # HEDERA_NETWORK=testnet
-# MONGODB_URI=mongodb://localhost:27017/mariposa
 npm run dev
 # API at http://localhost:5000
 # Swagger (if enabled) at http://localhost:5000/api-docs
@@ -79,101 +89,90 @@ npm run dev
 # Next.js at http://localhost:3000
 
 
-## Hedera Feature Highlights in Mariposa
+## Hedera Feature Highlights in HireMind
 
-- HTS Fungible Token creation via Agent tools
-- HCS Topic creation and message submission for evaluations
-- HBAR balance queries (agent and arbitrary account)
-- Agent‑scoped credentials: each agent signs with its own Hedera keys
+- HCS topic creation and message submission — used for testing and verification workflows
+- HBAR balance queries — check balances for the agent or any account
+- Agent-scoped credentials — each agent signs with its own Hedera keys
+- Integration in server.js, testHedera.js, hedera-hcs-test.js, and hedera-hcs-verify.js — all core Hedera operations live here
 
 ## Key REST Endpoints (Hedera)
 
 Base path: /hedera-tools
 
-- GET /tools?agentId=AGENT_ID — List available Hedera tools for the agent
-- GET /client-info — Hedera client status
-- GET /balance?accountId=0.0.xxx&agentId=AGENT_ID — Query HBAR balance
+- GET /client-info — Check Hedera client status
 - GET /my-balance?agentId=AGENT_ID — Query agent’s own HBAR balance
-- POST /create-token — Create HTS fungible token
-  - Body: { name, symbol, decimals, initialSupply, agentId, treasuryAccount? }
 - POST /create-topic — Create HCS topic
-  - Body: { memo?, adminKey?, submitKey?, agentId }
+  - Body: { memo?, agentId }
 - POST /submit-message — Submit message to HCS topic
   - Body: { topicId, message, agentId }
-- POST /create-evaluation-topic — HCS topic for candidate evaluation (HCS‑11 memo style)
-  - Body: { company, postId, candidateName, candidateId?, agentId }
-- POST /submit-evaluation-message — HCS‑11 evaluation message
-  - Body: { topicId, agentId, evaluation: { passed, score?, feedback?, interviewNotes? } }
-- POST /send-validation-message — HCS‑11 validation message
-  - Body: { topicId, agentId, evaluation: { passed, score?, feedback?, interviewNotes? } }
-- GET /evaluation-topic/:topicId — Topic details and messages
-- GET /evaluation-topics?company=...&postId=...&status=... — Filtered topics
+- POST /verify-message — Verify a message on HCS topic
+  - Body: { topicId, messageId,}
 
-Example: Create a token
+
+Example: Create an HCS topic
 
 bash
-curl -X POST http://localhost:5000/hedera-tools/create-token \
+curl -X POST http://localhost:5000/hedera-tools/create-topic \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Mariposa Token",
-    "symbol": "MARI",
-    "decimals": 2,
-    "initialSupply": 100000,
-    "agentId": "<AGENT_DB_ID>",
-    "treasuryAccount": "0.0.xxxxx"
+    "memo": "Candidate Evaluation Topic",
+    "agentId": "<AGENT_DB_ID>"
   }'
 
+## Frontend Highlights
 
-## Frontend (Next.js) Highlights
-
-- app/(authenticated)/dashboard — Main dashboard
-- components/WalletDashboard.tsx, WalletPage.tsx, WalletPipelinePage.tsx — Wallet and pipeline UX
-- components/MasterAgentChat.tsx — Agent chat with memory‑augmented reasoning
+- frontend/ — Main frontend folder containing HTML, CSS, and JS files
+- frontend/dashboard.html — Main dashboard page
+- frontend/js/ — JavaScript logic for dashboard interactions, uploads, and Hedera integration
+- frontend/css/ — Styles for dashboard and other pages
 
 ## Environment Variables (Backend)
 
 Minimum required in Backend/.env:
 
 bash
-HEDERA_ACCOUNT_ID=0.0.123456
-HEDERA_PRIVATE_KEY=302e0201...
-HEDERA_PUBLIC_KEY=302a3005...
-HEDERA_NETWORK=testnet
-MONGODB_URI=mongodb://localhost:27017/mariposa
-WALLET_ENCRYPTION_KEY=change-me
+ACCOUNT_ID=0.0.6871751
+PRIVATE_KEY=3030020100300706052b8104000a0422042055fff94cdd2ddbe570c187c754b84c9a75ed43ea28c4a6ff570bef53fb5aa326
+CLOUDINARY_CLOUD_NAME=denaqakxw
+CLOUDINARY_API_KEY=925397867295392
+CLOUDINARY_API_SECRET=poLQ7xKc9XRtOFwF5pA-JsNzkHs
+
+
 
 
 Notes:
 
-- Private keys may be stored encrypted at rest; the service transparently decrypts using WALLET_ENCRYPTION_KEY.
+- Private keys — Store your Hedera account private keys here. They can be encrypted at rest; the service uses WALLET_ENCRYPTION_KEY to decrypt them automatically.
 - Testnet by default; switch to mainnet by setting HEDERA_NETWORK=mainnet.
+- Other credentials — Include HEDERA_ACCOUNT_ID and HEDERA_PRIVATE_KEY for your agent account.
 
 ## Hackathon Story (What to Demo)
 
-- Problem: Coordinating trustable candidate evaluations and tokenized incentives is hard across teams; actions must be auditable and inexpensive.
-- Solution: Mariposa agents run decisioning, mint tokens, and immutably log evaluation messages on HCS; reviewers collaborate through agentic flows.
-- Why Hedera: predictable low fees, fast finality, robust HCS/HTS tooling, great developer ergonomics via Hedera Agent Kit.
-- Impact: Teams get an agentic “evaluation & wallet copilot” with verifiable on‑chain traces and programmable incentives.
+- Problem: Coordinating verifiable candidate evaluations is difficult; actions must be auditable and tamper-proof.
+- Solution: HireMind agents run decisioning, log evaluation messages immutably on HCS, and enable reviewers to collaborate securely.
+- Why Hedera: Fast finality, low predictable fees, secure HCS messaging, and easy developer integration via Hedera SDK.
+- Impact: Teams get an “evaluation copilot” with verifiable on-chain records and streamlined credential verification.
 
 ## Security & Compliance
 
-- Never commit secrets. Use environment variables.
-- Private keys are not returned in API responses.
-- Rate limiting, input validation, and auth middleware are in place and easily extended.
+- Keep secrets safe — Never commit .env or private keys to version control; use environment variables.
+- Private keys protected — Hedera private keys are never exposed in API responses.
+- Secure endpoints — Rate limiting, input validation, and authentication middleware are implemented and can be extended as needed.
 
 ## Testing
 
-Backend sample tests and scripts are included (see Backend/test-*.js). For Hedera tools:
-
+- Backend tests — Sample tests and scripts are included (see testHedera.js, hedera-hcs-test.js, hedera-hcs-verify.js).
 bash
 node Backend/test-hedera-agent-kit.js
-
+- Hedera tools — Scripts demonstrate creating HCS topics, submitting messages, verifying messages, and querying HBAR balances.
+- Running tests — Execute via Node.js:
 
 ## Deployment
 
-- Backend: containerize Node/Express; provide .env at runtime; connect to managed MongoDB
-- Frontend: build Next.js and deploy to your preferred platform
-- Hedera: use testnet for staging; switch to mainnet with proper keys and budgets
+- Backend: Run the Node/Express server. Provide a .env file at runtime with Hedera credentials and network configuration.
+- Frontend: Serve the HTML/CSS/JS files from any static hosting platform (e.g., Vercel, Netlify, or a simple web server).
+- Hedera: Use testnet for staging. Switch to mainnet by updating the .env with the correct account ID, private key, and HEDERA_NETWORK=mainnet.
 
 ## License
 

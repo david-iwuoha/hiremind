@@ -33,7 +33,7 @@ app.use(express.json());
 app.use(cors());
 
 // Ensure upload directories exist
-const uploadsDir = path.join(__dirname, "uploads");
+const uploadsDir = path.join(__dirname, "../uploads");
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
 const stampsDir = __dirname; // stamping currently writes next to project root; change if you want a folder
@@ -42,8 +42,8 @@ const stampsDir = __dirname; // stamping currently writes next to project root; 
 const MIRROR_NODE = process.env.MIRROR_NODE || "https://testnet.mirrornode.hedera.com";
 
 // Serve frontend static (adjust if your frontend lives in another folder)
-app.use(express.static(path.join(__dirname, "frontend")));
-app.use(express.static(path.join(__dirname, "public"))); // optional fallback
+app.use(express.static(path.join(__dirname, "../frontend")));
+app.use(express.static(path.join(__dirname, "../public"))); // optional fallback
 
 // Hedera SDK setup
 const accountId = process.env.ACCOUNT_ID;

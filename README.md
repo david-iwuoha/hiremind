@@ -8,6 +8,7 @@ HireMind is a Hedera-backed career trust platform. We notarize and issue verifia
 - Efficient verification pipeline: Structured document validation using Hedera Consensus Service (HCS) for real-time trust verification.
 #
 - CERTIFICATION LINK: (https://certs.hashgraphdev.com/3cbbb831-567e-4ccb-bf0e-a6915d026b60.pdf)
+- PITCH DECK (POWERPOINT SLIDES): 
 #
 This README emphasizes Hedera capabilities to align with Hedera hackathon requirements.
 

@@ -1,4 +1,4 @@
-# HireMind — Transforming Recruitment with Blockchain + AI
+# HireMind: Transforming Recruitment with Blockchain + AI
 
 HireMind is a Hedera-backed career trust platform. We notarize and issue verifiable credential badges (hashed documents/NFTs) for instant, secure verification of skills/certificates, ensuring complete trust and security for employers. It combines:
 
